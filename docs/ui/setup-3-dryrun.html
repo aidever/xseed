@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设置向导：试运行 · xseed</title>
+<link rel="stylesheet" href="xseed.css">
+</head>
+<body>
+<div class="wizard">
+<div class="brand"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg><div><b>xseed</b><span>辅种小助手</span></div></div>
+<div class="wizard-body">
+<ol class="steps" aria-label="设置步骤">
+<li class="done"><span class="n">✓</span>设置密码</li>
+<li class="done"><span class="n">✓</span>下载器</li>
+<li class="done"><span class="n">✓</span>确认站点</li>
+<li class="cur" aria-current="step"><span class="n">4</span>试运行</li>
+</ol>
+<section class="card" aria-labelledby="h">
+<div style="display:flex;flex-direction:column;gap:4px"><h1 id="h" style="font-size:22px">试运行完成：找到 148 个可以辅种的种子</h1><p class="muted">这一步只是查了一遍，还没有往下载器里加任何东西。</p></div>
+<div class="stats">
+<div class="stat"><span class="muted">可辅种</span><span class="v">148</span></div>
+<div class="stat"><span class="muted">合计体积</span><span class="v">2.1 TB</span><span class="small muted">不占用额外磁盘空间</span></div>
+<div class="stat"><span class="muted">预计完成</span><span class="v">3 天</span><span class="small muted">按每站每天 50 个</span></div>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th scope="col">辅到哪个站</th><th scope="col">数量</th><th scope="col">体积</th></tr></thead>
+<tbody>
+<tr><td><b>站点 Y</b></td><td class="num">71</td><td class="num">1.2 TB</td></tr>
+<tr><td><b>站点 Z</b></td><td class="num">44</td><td class="num">0.5 TB</td></tr>
+<tr><td><b>站点 V</b></td><td class="num">21</td><td class="num">0.3 TB</td></tr>
+<tr><td><b>站点 W</b></td><td class="num">12</td><td class="num">0.1 TB</td></tr>
+</tbody>
+</table>
+</div>
+<a class="small" href="#">查看完整列表</a>
+</section>
+
+<section class="card" aria-labelledby="promise-h" style="gap:10px">
+<h2 id="promise-h">开始之后会这样做</h2>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:#374151">
+<li>新种子直接指向你已有的文件，不复制、不移动、不删除任何文件</li>
+<li>加入的种子都带 <b>xseed</b> 标签，随时可以在“辅种记录”里一键全部移除</li>
+<li>每站每天最多加 50 个，启动时间随机错开，不给站点添压力</li>
+</ul>
+</section>
+<div class="wizard-foot"><a class="btn" href="setup-2-sites.html">上一步</a><a class="btn primary" href="overview.html">开始自动辅种</a></div>
+</div>
+</div>
+</body>
+</html>

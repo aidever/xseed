@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隐私说明 · xseed</title>
+<link rel="stylesheet" href="xseed.css">
+</head>
+<body>
+<div class="app">
+<nav class="nav" aria-label="主导航">
+<div class="brand">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg>
+<div><b>xseed</b><span>辅种小助手</span></div>
+</div>
+<a href="overview.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="label">概览</span></a>
+<a href="sites.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="label">站点</span></a>
+<a href="jobs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span class="label">辅种记录</span></a>
+<a href="settings.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg><span class="label">设置</span></a>
+<a href="privacy.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span class="label">隐私说明</span></a>
+<div class="net"><span class="dot"></span>辅种网络已连接</div>
+</nav>
+<main class="main">
+<header class="page-head">
+<div><h1>隐私说明</h1><p class="muted">xseed 怎么帮你辅种，以及每一方能看到什么。</p></div>
+</header>
+
+<section class="card" aria-labelledby="how-h">
+<h2 id="how-h">一次辅种是怎么发生的</h2>
+<ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;color:#374151">
+<li>小助手给你下载器里的每个种子算一个“文件指纹”，交给社区节点登记。指纹只由文件名和大小算出，看不出是什么内容。</li>
+<li>别人也有同样文件时，他会经节点给你发一条加密消息，问：“你在 Y 站有这个吗？”</li>
+<li>你的小助手先出一道题，只有 Y 站会员能答上来。答对了，才告诉他 Y 站的种子编号。</li>
+<li>他用自己的账号去 Y 站下载种子，加进自己的下载器做种。反过来，你也是这样从别人那里找到辅种的。</li>
+</ol>
+</section>
+
+<section class="see" aria-label="各方能看到什么">
+<div class="card">
+<h2>社区节点</h2>
+<p class="small muted">负责登记和转发，由不同的人提供</p>
+<ul class="can"><li>入口节点能看到你的 IP</li><li>负责登记的节点能看到不透明的指纹</li></ul>
+<ul class="cannot"><li>看不到消息内容</li><li>没有站点名和种子编号</li><li>单个节点对不上“IP”和“指纹”</li></ul>
+</div>
+<div class="card">
+<h2>其他用户</h2>
+<p class="small muted">手里有同样文件的人</p>
+<ul class="can"><li>答对会员题后，知道某个匿名用户在该站有这个种子</li></ul>
+<ul class="cannot"><li>拿不到你的 IP</li><li>不知道你是谁、在哪些站</li><li>不是会员就什么都拿不到</li></ul>
+</div>
+<div class="card">
+<h2>PT 站点</h2>
+<p class="small muted">和你平时用的一样</p>
+<ul class="can"><li>看到你下载了种子、开始做种</li></ul>
+<ul class="cannot"><li>不会多出任何别的信息</li></ul>
+</div>
+</section>
+
+<section class="card" aria-labelledby="never-h">
+<h2 id="never-h">xseed 不会做的事</h2>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:#374151">
+<li>不删除、不移动你的任何文件，也不改动你原有的种子</li>
+<li>不把 Cookie、passkey 等登录信息发给任何人，它们只加密保存在本机</li>
+<li>不在站长明确不允许的站点上运行</li>
+<li>不读取你硬盘上的文件内容（除非你手动开启抽查）</li>
+</ul>
+</section>
+</main>
+</div>
+</body>
+</html>

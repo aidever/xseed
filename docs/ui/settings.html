@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设置 · xseed</title>
+<link rel="stylesheet" href="xseed.css">
+</head>
+<body>
+<div class="app">
+<nav class="nav" aria-label="主导航">
+<div class="brand">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg>
+<div><b>xseed</b><span>辅种小助手</span></div>
+</div>
+<a href="overview.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="label">概览</span></a>
+<a href="sites.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="label">站点</span></a>
+<a href="jobs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span class="label">辅种记录</span></a>
+<a href="settings.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg><span class="label">设置</span></a>
+<a href="privacy.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span class="label">隐私说明</span></a>
+<div class="net"><span class="dot"></span>辅种网络已连接</div>
+</nav>
+<main class="main">
+<header class="page-head">
+<div><h1>设置</h1><p class="muted">大多数人不需要改这里。</p></div>
+<button type="button" class="btn primary">保存</button>
+</header>
+
+<section class="card" aria-labelledby="dl-h" style="max-width:880px">
+<h2 id="dl-h">下载器</h2>
+<div class="list-row" style="border-top:0;padding-top:0">
+<div class="grow"><b>qBittorrent 5.0.2</b><span class="small muted">http://192.168.1.10:8080 · 用户 admin</span></div>
+<span class="badge ok"><span class="dot"></span>已连接</span>
+<button type="button" class="btn sm">修改</button>
+</div>
+<button type="button" class="btn" style="align-self:flex-start">添加下载器</button>
+</section>
+
+<section class="card" aria-labelledby="auto-h" style="max-width:880px">
+<h2 id="auto-h">自动辅种</h2>
+<label class="switch"><input type="checkbox" checked><span><b>帮别人找到辅种</b><br><span class="small muted">当其他用户也有同样的文件，并证明自己是该站会员时，告诉他种子编号。关闭后，你仍能为自己辅种。</span></span></label>
+<div class="fields-2">
+<div class="field"><label for="add-limit">每站每天最多加种</label><input id="add-limit" type="number" value="50" min="1" max="500"><span class="hint">可在站点页为单个站点调整</span></div>
+<div class="field"><label for="ans-limit">每站每天最多答题</label><input id="ans-limit" type="number" value="30" min="1" max="200"><span class="hint">答题需要从站点下载一个种子文件</span></div>
+</div>
+</section>
+
+<section class="card" aria-labelledby="adv-h" style="max-width:880px">
+<h2 id="adv-h">高级</h2>
+<div class="fields-2">
+<div class="field"><label for="entry">入口节点</label><select id="entry"><option>自动选择（当前：hk-1，延迟 38 ms）</option><option>hk-1</option><option>sg-2</option><option>tokyo-1</option></select><span class="hint">所有消息都经入口节点转发；它能看到你的 IP，看不到内容</span></div>
+<div class="field"><label for="log">日志级别</label><select id="log"><option>普通</option><option>详细</option></select></div>
+</div>
+<label class="switch"><input type="checkbox" disabled><span><b>加种前抽查文件</b><br><span class="small muted">需要先为小助手映射数据目录。默认不读硬盘，直接信任下载器的做种状态。</span></span></label>
+</section>
+
+<section class="card" aria-labelledby="acc-h" style="max-width:880px">
+<h2 id="acc-h">账户</h2>
+<div class="list-row" style="border-top:0;padding-top:0"><div class="grow"><b>管理员密码</b><span class="small muted">上次修改：11 月 8 日</span></div><button type="button" class="btn sm">修改密码</button></div>
+</section>
+</main>
+</div>
+</body>
+</html>

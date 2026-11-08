@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="880" viewBox="0 0 1280 880" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC','WenQuanYi Zen Hei',sans-serif">
+  <defs>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/></marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="ay" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
+    <style>
+      .h{font-size:17px;font-weight:700;fill:#0f172a}
+      .b{font-size:14px;fill:#1e293b}
+      .s{font-size:13px;fill:#334155}
+      .t{font-size:11.5px;fill:#7c3aed;font-family:'JetBrains Mono','Consolas','WenQuanYi Zen Hei Mono',monospace}
+      .g{font-size:12px;fill:#64748b}
+      .n{font-size:12px;font-weight:700;fill:#fff}
+    </style>
+  </defs>
+
+  <rect width="1280" height="880" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="640" y="44" text-anchor="middle" style="font-size:26px;font-weight:700;fill:#0f172a">去中心化辅种 · 架构图</text>
+  <text x="640" y="72" text-anchor="middle" class="g" style="font-size:14px">黑色大字：它在做什么　｜　<tspan fill="#7c3aed">紫色小字：用什么技术实现</tspan>　｜　蓝色圆圈：步骤顺序</text>
+
+  <!-- 牵线服务 -->
+  <rect x="440" y="96" width="400" height="136" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="640" y="126" text-anchor="middle" class="h">牵线节点（任何人都可以提供）</text>
+  <text x="640" y="152" text-anchor="middle" class="b">帮两台设备找到彼此、交换联系方式</text>
+  <text x="640" y="174" text-anchor="middle" class="t">Rust 节点 · GitHub 注册中心 · 可水平扩展</text>
+  <rect x="490" y="188" width="300" height="28" rx="14" fill="#e2e8f0"/>
+  <text x="640" y="207" text-anchor="middle" class="g" style="fill:#475569">只看到一次性随机编号 · 看不到任何内容</text>
+
+  <!-- 找人连线 -->
+  <path d="M330,262 C330,200 380,175 438,170" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
+  <path d="M950,262 C950,200 900,175 842,170" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
+  <circle cx="196" cy="214" r="11" fill="#2563eb"/><text x="196" y="218.5" text-anchor="middle" class="n">2</text>
+  <text x="214" y="211" class="s">找人</text>
+  <text x="214" y="228" class="t">一次性信箱 ID</text>
+  <text x="968" y="211" class="s">登记“我有这份文件”</text>
+  <text x="968" y="228" class="t">key = H(指纹)</text>
+
+  <!-- 左：你的设备 -->
+  <rect x="40" y="262" width="360" height="330" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="220" y="292" text-anchor="middle" class="h">你的设备（NAS / 盒子）</text>
+  <rect x="64" y="308" width="312" height="62" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="220" y="334" text-anchor="middle" class="b" style="font-weight:700">qBittorrent / Transmission</text>
+  <text x="220" y="355" text-anchor="middle" class="t">WebUI API / RPC（只连本机）</text>
+  <line x1="120" y1="372" x2="120" y2="398" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
+  <circle cx="146" cy="385" r="11" fill="#2563eb"/><text x="146" y="389.5" text-anchor="middle" class="n">1</text>
+  <text x="164" y="390" class="s">读取已 100% 完成的种子</text>
+  <rect x="64" y="400" width="312" height="172" rx="10" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="220" y="426" text-anchor="middle" class="b" style="font-weight:700">辅种小助手</text>
+  <text x="82" y="452" class="s">· 计算文件指纹</text>
+  <text x="96" y="470" class="t">SHA-256(每个文件的路径 + 大小)</text>
+  <text x="82" y="496" class="s">· 账号 / passkey 只存在本机</text>
+  <text x="96" y="514" class="t">永不发送给任何人</text>
+  <text x="82" y="540" class="s">· 每次连接生成临时密钥</text>
+  <text x="96" y="558" class="t">X25519，用完即弃</text>
+
+  <!-- 右：对方设备 -->
+  <rect x="880" y="262" width="360" height="330" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="1060" y="292" text-anchor="middle" class="h">对方设备（也有这份文件的人）</text>
+  <rect x="904" y="308" width="312" height="62" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="1060" y="334" text-anchor="middle" class="b" style="font-weight:700">qBittorrent / Transmission</text>
+  <text x="1060" y="355" text-anchor="middle" class="t">WebUI API / RPC（只连本机）</text>
+  <line x1="1060" y1="372" x2="1060" y2="398" stroke="#94a3b8" stroke-width="2" marker-end="url(#ay)"/>
+  <rect x="904" y="400" width="312" height="172" rx="10" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="1060" y="426" text-anchor="middle" class="b" style="font-weight:700">辅种小助手</text>
+  <text x="922" y="452" class="s">· 知道这份文件在哪些站</text>
+  <text x="936" y="470" class="t">站点原版种子（发送前去掉凭证）</text>
+  <text x="922" y="496" class="s">· 只回答通过三道锁的人</text>
+  <text x="936" y="514" class="t">每天应答次数有上限</text>
+  <text x="922" y="540" class="s">· 只说双方共同所在的站</text>
+  <text x="936" y="558" class="t">其余站点一概不提</text>
+
+  <!-- 加密直连 -->
+  <circle cx="470" cy="380" r="11" fill="#2563eb"/><text x="470" y="384.5" text-anchor="middle" class="n">3</text>
+  <text x="488" y="385" class="b" style="font-weight:700;fill:#15803d">加密对话（双方互相看不到 IP）</text>
+  <text x="640" y="408" text-anchor="middle" class="t">Noise 端到端加密 · 全程经节点转发 · 不直连</text>
+  <line x1="380" y1="424" x2="900" y2="424" stroke="#16a34a" stroke-width="4" marker-start="url(#ag)" marker-end="url(#ag)"/>
+
+  <!-- 三道锁 -->
+  <circle cx="420" cy="458" r="11" fill="#2563eb"/><text x="420" y="462.5" text-anchor="middle" class="n">4</text>
+  <text x="438" y="463" class="s" style="font-weight:700">过三道锁，才交换「双方都是会员的站」的种子信息</text>
+
+  <rect x="410" y="478" width="146" height="114" rx="10" fill="#fffbeb" stroke="#fdba74" stroke-width="1.5"/>
+  <text x="483" y="502" text-anchor="middle" class="b" style="font-weight:700">锁1 文件暗号</text>
+  <text x="483" y="524" text-anchor="middle" class="s">没有这份文件</text>
+  <text x="483" y="542" text-anchor="middle" class="s">→ 连都连不上</text>
+  <text x="483" y="564" text-anchor="middle" class="t">Noise XX + PSK</text>
+  <text x="483" y="580" text-anchor="middle" class="t">PSK = HKDF(指纹)</text>
+
+  <rect x="567" y="478" width="146" height="114" rx="10" fill="#fffbeb" stroke="#fdba74" stroke-width="1.5"/>
+  <text x="640" y="502" text-anchor="middle" class="b" style="font-weight:700">锁2 现场抽查</text>
+  <text x="640" y="524" text-anchor="middle" class="s">只有文件列表</text>
+  <text x="640" y="542" text-anchor="middle" class="s">→ 答不出来</text>
+  <text x="640" y="564" text-anchor="middle" class="t">随机字节区间</text>
+  <text x="640" y="580" text-anchor="middle" class="t">SHA-256 挑战</text>
+
+  <rect x="724" y="478" width="146" height="114" rx="10" fill="#fffbeb" stroke="#fdba74" stroke-width="1.5"/>
+  <text x="797" y="502" text-anchor="middle" class="b" style="font-weight:700">锁3 会员验证</text>
+  <text x="797" y="524" text-anchor="middle" class="s">没有该站账号</text>
+  <text x="797" y="542" text-anchor="middle" class="s">→ 拿不到种子信息</text>
+  <text x="797" y="564" text-anchor="middle" class="t">站点周钥匙 AEAD</text>
+  <text x="797" y="580" text-anchor="middle" class="t">或 scrape 挑战</text>
+
+  <!-- 中继 -->
+  <path d="M380,594 C392,660 440,668 488,668" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
+  <path d="M900,594 C888,660 840,668 792,668" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
+  
+  <rect x="490" y="620" width="300" height="96" rx="14" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="640" y="648" text-anchor="middle" class="b" style="font-weight:700">信箱节点（各连自己选的一个）</text>
+  <text x="640" y="670" text-anchor="middle" class="s">只转发乱码，对方拿不到你的 IP</text>
+  <text x="640" y="694" text-anchor="middle" class="t">两跳转发 · 登记按索引节点公钥加密</text>
+
+  <!-- PT 站点 -->
+  <line x1="220" y1="574" x2="220" y2="634" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
+  <rect x="40" y="636" width="360" height="124" rx="14" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1.5"/>
+  <text x="220" y="664" text-anchor="middle" class="h">拿到种子并做种</text>
+  <circle cx="72" cy="688" r="11" fill="#2563eb"/><text x="72" y="692.5" text-anchor="middle" class="n">5</text>
+  <text x="90" y="693" class="s">对方的种子换上你的 passkey</text>
+  <text x="90" y="716" class="s">交给下载器直接做种，不读盘</text>
+  <text x="90" y="740" class="t">不行再从站点下载 · 免 hash 校验</text>
+
+  <!-- 图例 -->
+  <rect x="880" y="636" width="360" height="124" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="904" y="662" class="b" style="font-weight:700">图例</text>
+  <line x1="904" y1="684" x2="964" y2="684" stroke="#16a34a" stroke-width="4"/>
+  <text x="976" y="689" class="s">端到端加密，只有双方看得懂</text>
+  <line x1="904" y1="710" x2="964" y2="710" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="976" y="715" class="s">经节点转发，只有随机编号或乱码</text>
+  <line x1="904" y1="736" x2="964" y2="736" stroke="#2563eb" stroke-width="2"/>
+  <text x="976" y="741" class="s">本机内部 / 你和站点之间</text>
+
+  <!-- 安全要点 -->
+  <rect x="40" y="790" width="1200" height="64" rx="14" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <text x="640" y="818" text-anchor="middle" class="b" style="font-weight:700;fill:#166534">安全要点</text>
+  <text x="640" y="842" text-anchor="middle" class="s">没有中心服务器 · 账号永不出本机 · 对方拿不到你的 IP · 节点看不到内容 · 没文件 / 没账号什么也拿不到 · 假信息对不上本机文件结构就丢弃</text>
+</svg>
