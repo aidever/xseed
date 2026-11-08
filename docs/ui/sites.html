@@ -9,64 +9,59 @@
 <body>
 <div class="app">
 <nav class="nav" aria-label="主导航">
-<div class="brand">
-<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg>
-<div><b>xseed</b><span>辅种小助手</span></div>
-</div>
-<a href="overview.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="label">概览</span></a>
-<a href="sites.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="label">站点</span></a>
-<a href="jobs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span class="label">辅种记录</span></a>
-<a href="settings.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg><span class="label">设置</span></a>
-<a href="privacy.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span class="label">隐私说明</span></a>
-<div class="net"><span class="dot"></span>辅种网络已连接</div>
-</nav>
+<a class="brand" href="overview.html"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#3D5AFE"/><circle cx="13.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4"/><circle cx="20.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2.4"/></svg><span><b>xseed</b><small>辅种小助手</small></span></a>
+<div class="nav-label">菜单</div>
+<a class="item" href="overview.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span class="label">概览</span></a>
+<a class="item" href="sites.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21M12 3C9.5 5.7 8.2 8.7 8.2 12s1.3 6.3 3.8 9"/></svg><span class="label">站点</span></a>
+<a class="item" href="jobs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg><span class="label">辅种记录</span><span class="count">3</span></a>
+<a class="item" href="settings.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span class="label">设置</span></a>
+<a class="item" href="privacy.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.6-3.3 8-8 9-4.7-1-8-4.4-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span class="label">隐私说明</span></a>
+<div class="net"><div class="net-head"><span class="pulse"></span>辅种网络已连接</div><div class="net-row"><span>入口节点</span><span>hk-1 · 38 ms</span></div><div class="net-row"><span>已登记</span><span>3,214 个种子</span></div></div></nav>
 <main class="main">
 <header class="page-head">
-<div><h1>站点</h1><p class="muted">从你的做种列表里自动识别。只有勾选的站点会参与辅种。</p></div>
-<button type="button" class="btn">重新识别</button>
+<div class="title"><h1>站点</h1><p class="muted">从你的做种列表里自动识别。只有打开开关的站点会参与辅种。</p></div>
+<div class="actions"><button type="button" class="btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.6-4.4L4 8M4 4v4h4M4 13a8 8 0 0 0 14.6 4.4L20 16M20 20v-4h-4"/></svg>重新识别</button></div>
 </header>
 
 <section class="card" aria-labelledby="list-h">
-<div class="card-head"><h2 id="list-h">已识别的站点</h2><span class="small muted">共 6 个</span></div>
+<div class="card-head"><div><h2 id="list-h">已识别 6 个站点</h2><p class="sub">登录信息只加密保存在本机，不会发给任何人</p></div></div>
 <div class="table-wrap">
-<table class="stack" data-roles="sw,main,meta,meta,meta,meta,act">
-<thead><tr><th scope="col">参与</th><th scope="col">站点</th><th scope="col">本机种子</th><th scope="col">登录信息</th><th scope="col">站点态度</th><th scope="col">今日额度</th><th scope="col"><span style="position:absolute;left:-9999px">操作</span></th></tr></thead>
+<table class="stack" data-roles="main,meta,meta,meta,meta,sw">
+<thead><tr><th scope="col">站点</th><th scope="col">本机种子</th><th scope="col">登录信息</th><th scope="col">站点态度</th><th scope="col">今日额度</th><th scope="col"><span class="sr">参与辅种</span></th></tr></thead>
 <tbody>
-<tr><td class="c-sw"><label class="switch"><input type="checkbox" checked aria-label="站点 Y 参与辅种"></label></td><td class="c-main"><b>站点 Y</b><div class="small muted">tracker.site-y.example</div></td><td class="c-meta num" data-label="本机种子">1,412</td><td class="c-meta" data-label="登录信息"><span class="badge ok">PT-depiler</span></td><td class="c-meta" data-label="站点态度"><span class="badge ok">允许</span></td><td class="c-meta num" data-label="今日额度">7 / 50</td><td class="c-act"><a class="btn sm" href="#">详情</a></td></tr>
-<tr><td class="c-sw"><label class="switch"><input type="checkbox" checked aria-label="站点 Z 参与辅种"></label></td><td class="c-main"><b>站点 Z</b><div class="small muted">tracker.site-z.example</div></td><td class="c-meta num" data-label="本机种子">846</td><td class="c-meta" data-label="登录信息"><span class="badge ok">tracker 地址</span></td><td class="c-meta" data-label="站点态度"><span class="badge mute">未表态</span></td><td class="c-meta num" data-label="今日额度">4 / 50</td><td class="c-act"><a class="btn sm" href="#">详情</a></td></tr>
-<tr><td class="c-sw"><label class="switch"><input type="checkbox" checked aria-label="站点 V 参与辅种"></label></td><td class="c-main"><b>站点 V</b><div class="small muted">pt.site-v.example</div></td><td class="c-meta num" data-label="本机种子">322</td><td class="c-meta" data-label="登录信息"><span class="badge ok">PT-depiler</span></td><td class="c-meta" data-label="站点态度"><span class="badge ok">允许</span><div class="small muted">加种后会校验</div></td><td class="c-meta num" data-label="今日额度">1 / 20</td><td class="c-act"><a class="btn sm" href="#">详情</a></td></tr>
-<tr><td class="c-sw"><label class="switch"><input type="checkbox" checked aria-label="站点 W 参与辅种"></label></td><td class="c-main"><b>站点 W</b><div class="small muted">tracker.site-w.example</div></td><td class="c-meta num" data-label="本机种子">201</td><td class="c-meta" data-label="登录信息"><span class="badge err">已失效</span><div class="small" style="color:#991B1B">请在 PT-depiler 重新登录</div></td><td class="c-meta" data-label="站点态度"><span class="badge mute">未表态</span></td><td class="c-meta muted" data-label="今日额度">暂停</td><td class="c-act"><a class="btn sm" href="#">更新</a></td></tr>
-<tr><td class="c-sw"><label class="switch"><input type="checkbox" aria-label="站点 U 参与辅种"></label></td><td class="c-main"><b>站点 U</b><div class="small muted">u.example</div></td><td class="c-meta num" data-label="本机种子">96</td><td class="c-meta" data-label="登录信息"><span class="badge warn">需要 Cookie</span></td><td class="c-meta" data-label="站点态度"><span class="badge mute">未表态</span></td><td class="c-meta muted" data-label="今日额度">—</td><td class="c-act"><a class="btn sm" href="#">填写</a></td></tr>
-<tr><td class="c-sw"><label class="switch"><input type="checkbox" disabled aria-label="站点 T 参与辅种（站长不允许）"></label></td><td class="c-main"><b>站点 T</b><div class="small muted">t.example</div></td><td class="c-meta num" data-label="本机种子">37</td><td class="c-meta" data-label="登录信息"><span class="badge ok">tracker 地址</span></td><td class="c-meta" data-label="站点态度"><span class="badge err">站长不允许</span></td><td class="c-meta muted" data-label="今日额度">—</td><td class="c-act"></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av y">Y</span><div><b>站点 Y</b><span>tracker.site-y.example</span></div></div></td><td class="c-meta num" data-label="本机种子">1,412</td><td class="c-meta" data-label="登录信息"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>PT-depiler</span></td><td class="c-meta" data-label="站点态度"><span class="chip">允许</span></td><td class="c-meta num" data-label="今日额度">7 / 50</td><td class="c-sw"><label class="switch" style="justify-content:flex-end"><input type="checkbox" checked aria-label="站点 Y 参与辅种"></label></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av z">Z</span><div><b>站点 Z</b><span>tracker.site-z.example</span></div></div></td><td class="c-meta num" data-label="本机种子">846</td><td class="c-meta" data-label="登录信息"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>tracker 地址</span></td><td class="c-meta" data-label="站点态度"><span class="chip">未表态</span></td><td class="c-meta num" data-label="今日额度">4 / 50</td><td class="c-sw"><label class="switch" style="justify-content:flex-end"><input type="checkbox" checked aria-label="站点 Z 参与辅种"></label></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av v">V</span><div><b>站点 V</b><span>pt.site-v.example</span></div></div></td><td class="c-meta num" data-label="本机种子">322</td><td class="c-meta" data-label="登录信息"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>PT-depiler</span></td><td class="c-meta" data-label="站点态度"><span class="chip">允许 · 加种后校验</span></td><td class="c-meta num" data-label="今日额度">1 / 20</td><td class="c-sw"><label class="switch" style="justify-content:flex-end"><input type="checkbox" checked aria-label="站点 V 参与辅种"></label></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av w">W</span><div><b>站点 W</b><span>tracker.site-w.example</span></div></div></td><td class="c-meta num" data-label="本机种子">201</td><td class="c-meta" data-label="登录信息"><span class="chip err">已失效</span> <a class="small" href="#">怎么修复</a></td><td class="c-meta" data-label="站点态度"><span class="chip">未表态</span></td><td class="c-meta muted" data-label="今日额度">已暂停</td><td class="c-sw"><label class="switch" style="justify-content:flex-end"><input type="checkbox" checked aria-label="站点 W 参与辅种"></label></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av u">U</span><div><b>站点 U</b><span>u.example</span></div></div></td><td class="c-meta num" data-label="本机种子">96</td><td class="c-meta" data-label="登录信息"><span class="chip warn">需要 Cookie</span> <a class="small" href="#">填写</a></td><td class="c-meta" data-label="站点态度"><span class="chip">未表态</span></td><td class="c-meta muted" data-label="今日额度">—</td><td class="c-sw"><label class="switch" style="justify-content:flex-end"><input type="checkbox" aria-label="站点 U 参与辅种"></label></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av t">T</span><div><b class="muted">站点 T</b><span>t.example</span></div></div></td><td class="c-meta num muted" data-label="本机种子">37</td><td class="c-meta" data-label="登录信息"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>tracker 地址</span></td><td class="c-meta" data-label="站点态度"><span class="chip err">站长不允许</span></td><td class="c-meta muted" data-label="今日额度">—</td><td class="c-sw"><label class="switch" style="justify-content:flex-end"><input type="checkbox" disabled aria-label="站点 T 参与辅种（站长不允许）"></label></td></tr>
 </tbody>
 </table>
 </div>
-<p class="small muted">登录信息只保存在本机，加密存储，不会发给任何人。站长不允许的站点无法开启。</p>
-</section>
-<section class="card" aria-labelledby="ptd-h">
-<div class="card-head">
-<div style="display:flex;flex-direction:column;gap:2px"><h2 id="ptd-h">从 PT-depiler 同步登录信息</h2><p class="small muted">PT-depiler 定时备份到这里，各站 Cookie 就会自动保持最新。</p></div>
-<span class="badge ok"><span class="dot"></span>已同步 14 个站点 · 3 小时前</span>
-</div>
-<div class="row" style="gap:24px">
-<div class="kv" style="flex: 1 1 420px">
-<span class="muted">地址</span><div class="copy-row"><code>http://192.168.1.10:7731/ptd/</code><button type="button" class="btn sm">复制</button></div>
-<span class="muted">用户名</span><div class="copy-row"><code>ptd</code><button type="button" class="btn sm">复制</button></div>
-<span class="muted">密码</span><div class="copy-row"><code>k7Qx••••••••••••••••Zp2</code><button type="button" class="btn sm">复制</button><button type="button" class="btn sm">换一个</button></div>
-</div>
-<div style="flex: 1 1 260px; display:flex; flex-direction:column; gap:10px">
-<p style="font-weight:500">在 PT-depiler 里怎么填</p>
-<ol class="small" style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;color:#374151">
-<li>设置 → 备份 → 添加备份服务器，类型选 WebDAV</li>
-<li>填入地址、用户名、密码，Digest 不要勾选</li>
-<li>备份内容勾选“Cookie”和“元数据”</li>
-<li>自动备份间隔建议 6 小时</li>
-</ol>
-<div class="field"><label for="ptd-key">加密密钥（推荐）</label><input id="ptd-key" type="password" value="••••••••••"><span class="hint">和 PT-depiler 备份设置里的加密密钥填成一样</span></div>
-</div>
-</div>
 </section>
 
+<section class="card" aria-labelledby="ptd-h">
+<div class="card-head">
+<div style="display:flex;gap:14px;align-items:center"><span class="kpi" style="padding:0"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3"/></svg></span></span><div><h2 id="ptd-h">从 PT-depiler 同步登录信息</h2><p class="sub">PT-depiler 每次自动备份，各站 Cookie 就会更新到这里</p></div></div>
+<span class="chip ok"><span class="d"></span>3 小时前同步了 14 个站点</span>
+</div>
+<div class="grid" style="gap:28px">
+<div class="kv span-7">
+<span>地址</span><div class="copy"><code>http://192.168.1.10:7731/ptd/</code><button type="button" class="btn sm ghost" aria-label="复制地址"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
+<span>用户名</span><div class="copy"><code>ptd</code><button type="button" class="btn sm ghost" aria-label="复制用户名"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
+<span>密码</span><div class="copy"><code>k7Qx••••••••••••Zp2</code><button type="button" class="btn sm ghost" aria-label="复制密码"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button><button type="button" class="btn sm ghost" aria-label="重新生成密码"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.6-4.4L4 8M4 4v4h4M4 13a8 8 0 0 0 14.6 4.4L20 16M20 20v-4h-4"/></svg></button></div>
+</div>
+<div class="span-5" style="display:flex;flex-direction:column;gap:14px">
+<ol class="small" style="padding-left:18px;display:flex;flex-direction:column;gap:6px;color:var(--ink-2)">
+<li>PT-depiler：设置 → 备份 → 添加 WebDAV</li>
+<li>填入地址、用户名、密码（不勾选 Digest）</li>
+<li>备份内容勾选“Cookie”和“元数据”</li>
+<li>自动备份间隔设为 6 小时</li>
+</ol>
+<div class="field"><label for="ptd-key">加密密钥 <span class="chip accent" style="height:20px;font-size:11.5px">推荐</span></label><input id="ptd-key" type="password" value="••••••••••"><span class="hint">与 PT-depiler 备份设置中的加密密钥一致</span></div>
+</div>
+</div>
+</section>
 </main>
 </div>
 </body>

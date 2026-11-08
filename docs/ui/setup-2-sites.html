@@ -7,44 +7,41 @@
 <link rel="stylesheet" href="xseed.css">
 </head>
 <body>
-<div class="wizard">
-<div class="brand"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg><div><b>xseed</b><span>辅种小助手</span></div></div>
-<div class="wizard-body" style="max-width:880px">
-<ol class="steps" aria-label="设置步骤">
-<li class="done"><span class="n">✓</span>设置密码</li>
-<li class="done"><span class="n">✓</span>下载器</li>
-<li class="cur" aria-current="step"><span class="n">3</span>确认站点</li>
-<li class=""><span class="n">4</span>试运行</li>
-</ol>
-<section class="card" aria-labelledby="h">
-<div style="display:flex;flex-direction:column;gap:4px"><h1 id="h" style="font-size:22px">从你的做种列表里识别到 6 个站点</h1><p class="muted">勾选要参与辅种的站点。大部分站点的登录信息已从 tracker 地址里自动取得，什么都不用填。</p></div>
+<div class="wiz"><aside class="wiz-side"><a class="brand" href="#"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#3D5AFE"/><circle cx="13.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4"/><circle cx="20.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2.4"/></svg><span><b>xseed</b><small>辅种小助手</small></span></a><ol class="steps" aria-label="设置步骤">
+<li class="done"><span class="n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="t"><b>设置密码</b><span>保护这个管理页面</span></span></li>
+<li class="done"><span class="n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="t"><b>连接下载器</b><span>qBittorrent 或 Transmission</span></span></li>
+<li class="cur" aria-current="step"><span class="n">3</span><span class="t"><b>确认站点</b><span>自动识别，勾选即可</span></span></li>
+<li class=""><span class="n">4</span><span class="t"><b>试运行</b><span>先看看能辅多少</span></span></li>
+</ol><ul class="wiz-note" style="list-style:none;padding:0"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>不复制、不移动、不删除你的任何文件</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>登录信息只加密保存在本机</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>随时可以一键撤销全部辅种</span></li></ul></aside>
+<main class="wiz-main">
+<div class="wiz-head"><span class="step">第 3 步，共 4 步</span><h1>识别到 6 个站点</h1><p>大部分站点的登录信息已经从 tracker 地址里自动取得，勾选要参与的站点即可。</p></div>
+
+<section class="card">
 <div class="table-wrap">
-<table class="stack" data-roles="sw,main,meta,meta">
-<thead><tr><th scope="col">参与</th><th scope="col">站点</th><th scope="col">本机种子</th><th scope="col">状态</th></tr></thead>
+<table class="stack" data-roles="main,meta,meta,sw">
+<thead><tr><th scope="col">站点</th><th scope="col">本机种子</th><th scope="col">状态</th><th scope="col"><span class="sr">参与</span></th></tr></thead>
 <tbody>
-<tr><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 Y"></td><td class="c-main"><b>站点 Y</b></td><td class="c-meta num" data-label="本机种子">1,412</td><td class="c-meta" data-label="状态"><span class="badge ok">可直接用</span></td></tr>
-<tr><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 Z"></td><td class="c-main"><b>站点 Z</b></td><td class="c-meta num" data-label="本机种子">846</td><td class="c-meta" data-label="状态"><span class="badge ok">可直接用</span> <span class="small muted">站点未表态</span></td></tr>
-<tr><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 V"></td><td class="c-main"><b>站点 V</b></td><td class="c-meta num" data-label="本机种子">322</td><td class="c-meta" data-label="状态"><span class="badge ok">可直接用</span> <span class="small muted">该站加种后会校验</span></td></tr>
-<tr><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 W"></td><td class="c-main"><b>站点 W</b></td><td class="c-meta num" data-label="本机种子">201</td><td class="c-meta" data-label="状态"><span class="badge ok">可直接用</span> <span class="small muted">站点未表态</span></td></tr>
-<tr><td class="c-sw"><input class="box" type="checkbox" aria-label="站点 U"></td><td class="c-main"><b>站点 U</b></td><td class="c-meta num" data-label="本机种子">96</td><td class="c-meta" data-label="状态"><span class="badge warn">需要 Cookie</span> <span class="small muted">从 PT-depiler 同步，或稍后在站点页填写</span></td></tr>
-<tr><td class="c-sw"><input class="box" type="checkbox" disabled aria-label="站点 T（站长不允许）"></td><td class="c-main"><b style="color:#4B5563">站点 T</b></td><td class="c-meta num muted" data-label="本机种子">37</td><td class="c-meta" data-label="状态"><span class="badge err">站长不允许</span></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av y">Y</span><b>站点 Y</b></div></td><td class="c-meta num" data-label="本机种子">1,412</td><td class="c-meta" data-label="状态"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>可直接用</span></td><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 Y"></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av z">Z</span><b>站点 Z</b></div></td><td class="c-meta num" data-label="本机种子">846</td><td class="c-meta" data-label="状态"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>可直接用</span> <span class="small muted">站点未表态</span></td><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 Z"></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av v">V</span><b>站点 V</b></div></td><td class="c-meta num" data-label="本机种子">322</td><td class="c-meta" data-label="状态"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>可直接用</span> <span class="small muted">加种后会校验</span></td><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 V"></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av w">W</span><b>站点 W</b></div></td><td class="c-meta num" data-label="本机种子">201</td><td class="c-meta" data-label="状态"><span class="chip ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>可直接用</span> <span class="small muted">站点未表态</span></td><td class="c-sw"><input class="box" type="checkbox" checked aria-label="站点 W"></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av u">U</span><b>站点 U</b></div></td><td class="c-meta num" data-label="本机种子">96</td><td class="c-meta" data-label="状态"><span class="chip warn">需要 Cookie</span> <span class="small muted">可用下方 PT-depiler 同步</span></td><td class="c-sw"><input class="box" type="checkbox" aria-label="站点 U"></td></tr>
+<tr><td class="c-main"><div class="cell-site"><span class="av t">T</span><b class="muted">站点 T</b></div></td><td class="c-meta num muted" data-label="本机种子">37</td><td class="c-meta" data-label="状态"><span class="chip err">站长不允许</span></td><td class="c-sw"><input class="box" type="checkbox" disabled aria-label="站点 T（站长不允许）"></td></tr>
 </tbody>
 </table>
 </div>
 </section>
 
-<details class="card" open>
-<summary style="cursor:pointer;font-weight:600;min-height:28px">用 PT-depiler？一键同步所有站点的 Cookie（可选）</summary>
-<p class="muted">在 PT-depiler 的“设置 → 备份”里添加一个 WebDAV 服务器，填入下面三项，并勾选“Cookie”和“元数据”。以后它每次自动备份，小助手就能拿到最新的登录信息。</p>
+<details class="card">
+<summary style="cursor:pointer;display:flex;align-items:center;gap:12px;list-style:none"><span class="kpi" style="padding:0"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3"/></svg></span></span><span style="display:flex;flex-direction:column"><b>用 PT-depiler？一键同步所有站点的 Cookie</b><span class="small muted">可选，之后也能在站点页设置</span></span></summary>
 <div class="kv">
-<span class="muted">地址</span><div class="copy-row"><code>http://192.168.1.10:7731/ptd/</code><button type="button" class="btn sm">复制</button></div>
-<span class="muted">用户名</span><div class="copy-row"><code>ptd</code><button type="button" class="btn sm">复制</button></div>
-<span class="muted">密码</span><div class="copy-row"><code>k7Qx••••••••••••••••Zp2</code><button type="button" class="btn sm">复制</button></div>
+<span>地址</span><div class="copy"><code>http://192.168.1.10:7731/ptd/</code><button type="button" class="btn sm ghost" aria-label="复制地址"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
+<span>用户名</span><div class="copy"><code>ptd</code><button type="button" class="btn sm ghost" aria-label="复制用户名"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
+<span>密码</span><div class="copy"><code>k7Qx••••••••••••Zp2</code><button type="button" class="btn sm ghost" aria-label="复制密码"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
 </div>
-<div class="alert info"><p>等待 PT-depiler 第一次备份…… 在 PT-depiler 里点一下“立即备份”就能马上看到结果。</p></div>
 </details>
-<div class="wizard-foot"><a class="btn" href="setup-1-downloader.html">上一步</a><a class="btn primary" href="setup-3-dryrun.html">下一步：试运行</a></div>
-</div>
-</div>
+
+<div class="wiz-foot"><a class="btn ghost" href="setup-1-downloader.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>上一步</a><a class="btn primary lg" href="setup-3-dryrun.html">下一步：试运行<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</main></div>
 </body>
 </html>

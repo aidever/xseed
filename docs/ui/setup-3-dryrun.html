@@ -7,46 +7,40 @@
 <link rel="stylesheet" href="xseed.css">
 </head>
 <body>
-<div class="wizard">
-<div class="brand"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg><div><b>xseed</b><span>辅种小助手</span></div></div>
-<div class="wizard-body">
-<ol class="steps" aria-label="设置步骤">
-<li class="done"><span class="n">✓</span>设置密码</li>
-<li class="done"><span class="n">✓</span>下载器</li>
-<li class="done"><span class="n">✓</span>确认站点</li>
-<li class="cur" aria-current="step"><span class="n">4</span>试运行</li>
-</ol>
-<section class="card" aria-labelledby="h">
-<div style="display:flex;flex-direction:column;gap:4px"><h1 id="h" style="font-size:22px">试运行完成：找到 148 个可以辅种的种子</h1><p class="muted">这一步只是查了一遍，还没有往下载器里加任何东西。</p></div>
-<div class="stats">
-<div class="stat"><span class="muted">可辅种</span><span class="v">148</span></div>
-<div class="stat"><span class="muted">合计体积</span><span class="v">2.1 TB</span><span class="small muted">不占用额外磁盘空间</span></div>
-<div class="stat"><span class="muted">预计完成</span><span class="v">3 天</span><span class="small muted">按每站每天 50 个</span></div>
+<div class="wiz"><aside class="wiz-side"><a class="brand" href="#"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#3D5AFE"/><circle cx="13.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4"/><circle cx="20.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2.4"/></svg><span><b>xseed</b><small>辅种小助手</small></span></a><ol class="steps" aria-label="设置步骤">
+<li class="done"><span class="n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="t"><b>设置密码</b><span>保护这个管理页面</span></span></li>
+<li class="done"><span class="n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="t"><b>连接下载器</b><span>qBittorrent 或 Transmission</span></span></li>
+<li class="done"><span class="n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="t"><b>确认站点</b><span>自动识别，勾选即可</span></span></li>
+<li class="cur" aria-current="step"><span class="n">4</span><span class="t"><b>试运行</b><span>先看看能辅多少</span></span></li>
+</ol><ul class="wiz-note" style="list-style:none;padding:0"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>不复制、不移动、不删除你的任何文件</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>登录信息只加密保存在本机</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>随时可以一键撤销全部辅种</span></li></ul></aside>
+<main class="wiz-main">
+<div class="wiz-head"><span class="step">第 4 步，共 4 步</span><h1>找到 148 个可以辅种的种子</h1><p>这一步只是查了一遍，还没有往下载器里加任何东西。</p></div>
+
+<section class="card">
+<div class="hero" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:start;gap:20px">
+<div class="hero-num"><span class="k">可辅种</span><span class="v" style="font-size:40px">148</span></div>
+<div class="hero-num"><span class="k">合计体积</span><span class="v" style="font-size:40px">2.1<small>TB</small></span></div>
+<div class="hero-num"><span class="k">额外占用磁盘</span><span class="v" style="font-size:40px">0<small>B</small></span></div>
 </div>
-<div class="table-wrap">
-<table>
-<thead><tr><th scope="col">辅到哪个站</th><th scope="col">数量</th><th scope="col">体积</th></tr></thead>
-<tbody>
-<tr><td><b>站点 Y</b></td><td class="num">71</td><td class="num">1.2 TB</td></tr>
-<tr><td><b>站点 Z</b></td><td class="num">44</td><td class="num">0.5 TB</td></tr>
-<tr><td><b>站点 V</b></td><td class="num">21</td><td class="num">0.3 TB</td></tr>
-<tr><td><b>站点 W</b></td><td class="num">12</td><td class="num">0.1 TB</td></tr>
-</tbody>
-</table>
+<div class="divide" style="margin-top:4px">
+<div class="quota"><span class="av sm y">Y</span><div class="grow"><div class="top"><span>站点 Y</span><span class="muted num">71 个 · 1.2 TB</span></div><div class="meter"><i style="width:100%"></i></div></div></div>
+<div class="quota"><span class="av sm z">Z</span><div class="grow"><div class="top"><span>站点 Z</span><span class="muted num">44 个 · 0.5 TB</span></div><div class="meter"><i style="width:62%"></i></div></div></div>
+<div class="quota"><span class="av sm v">V</span><div class="grow"><div class="top"><span>站点 V</span><span class="muted num">21 个 · 0.3 TB</span></div><div class="meter"><i style="width:30%"></i></div></div></div>
+<div class="quota"><span class="av sm w">W</span><div class="grow"><div class="top"><span>站点 W</span><span class="muted num">12 个 · 0.1 TB</span></div><div class="meter"><i style="width:17%"></i></div></div></div>
 </div>
 <a class="small" href="#">查看完整列表</a>
 </section>
 
-<section class="card" aria-labelledby="promise-h" style="gap:10px">
-<h2 id="promise-h">开始之后会这样做</h2>
-<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:#374151">
-<li>新种子直接指向你已有的文件，不复制、不移动、不删除任何文件</li>
-<li>加入的种子都带 <b>xseed</b> 标签，随时可以在“辅种记录”里一键全部移除</li>
-<li>每站每天最多加 50 个，启动时间随机错开，不给站点添压力</li>
+<section class="card" style="gap:12px">
+<h2>开始之后</h2>
+<ul class="ticks">
+<li class="n"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>新种子直接指向你已有的文件，不复制、不移动、不删除</span></li>
+<li class="n"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>每站每天最多加 50 个，预计 3 天内全部完成；启动时间随机错开</span></li>
+<li class="n"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>加入的种子都带 <b>xseed</b> 标签，随时可在“辅种记录”里一键撤销</span></li>
 </ul>
 </section>
-<div class="wizard-foot"><a class="btn" href="setup-2-sites.html">上一步</a><a class="btn primary" href="overview.html">开始自动辅种</a></div>
-</div>
-</div>
+
+<div class="wiz-foot"><a class="btn ghost" href="setup-2-sites.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>上一步</a><a class="btn primary lg" href="overview.html">开始自动辅种<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</main></div>
 </body>
 </html>

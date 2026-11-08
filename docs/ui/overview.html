@@ -9,53 +9,66 @@
 <body>
 <div class="app">
 <nav class="nav" aria-label="主导航">
-<div class="brand">
-<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#0F766E"/><path d="M8 9l12 10M20 9L8 19" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg>
-<div><b>xseed</b><span>辅种小助手</span></div>
-</div>
-<a href="overview.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="label">概览</span></a>
-<a href="sites.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="label">站点</span></a>
-<a href="jobs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span class="label">辅种记录</span></a>
-<a href="settings.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg><span class="label">设置</span></a>
-<a href="privacy.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span class="label">隐私说明</span></a>
-<div class="net"><span class="dot"></span>辅种网络已连接</div>
-</nav>
+<a class="brand" href="overview.html"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#3D5AFE"/><circle cx="13.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4"/><circle cx="20.5" cy="17" r="6.5" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2.4"/></svg><span><b>xseed</b><small>辅种小助手</small></span></a>
+<div class="nav-label">菜单</div>
+<a class="item" href="overview.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span class="label">概览</span></a>
+<a class="item" href="sites.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21M12 3C9.5 5.7 8.2 8.7 8.2 12s1.3 6.3 3.8 9"/></svg><span class="label">站点</span></a>
+<a class="item" href="jobs.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg><span class="label">辅种记录</span><span class="count">3</span></a>
+<a class="item" href="settings.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span class="label">设置</span></a>
+<a class="item" href="privacy.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.6-3.3 8-8 9-4.7-1-8-4.4-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span class="label">隐私说明</span></a>
+<div class="net"><div class="net-head"><span class="pulse"></span>辅种网络已连接</div><div class="net-row"><span>入口节点</span><span>hk-1 · 38 ms</span></div><div class="net-row"><span>已登记</span><span>3,214 个种子</span></div></div></nav>
 <main class="main">
 <header class="page-head">
-<div><h1>概览</h1><p class="muted">全自动运行中 · 下次查询新种子 14:30</p></div>
-<button type="button" class="btn">暂停辅种</button>
+<div class="title"><h1>概览</h1><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="chip ok"><span class="d"></span>自动运行中</span><span class="small muted">下次查询新种子 14:30</span></div></div>
+<div class="actions"><button type="button" class="btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>暂停辅种</button></div>
 </header>
 
-<section class="alert warn" aria-label="需要处理">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17h.01"/></svg>
-<p>站点 W 下载种子失败：登录信息已失效。请在 PT-depiler 中重新登录该站，或在站点页更新 Cookie。</p>
-<a class="btn warn sm" href="sites.html">去处理</a>
+<section class="banner warn" aria-label="需要处理">
+<span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 2.5 20h19z"/><path d="M12 10v4M12 17.2v.1"/></svg></span>
+<div class="body"><b>站点 W 的登录信息已失效</b><span class="small">今天有 1 个种子因此没能辅上。在 PT-depiler 里重新登录该站，下次同步后会自动恢复。</span></div>
+<a class="btn sm" href="sites.html">去处理</a>
 </section>
 
-<section class="stats" aria-label="统计">
-<div class="stat"><span class="muted">今日辅种成功</span><span class="v">12</span><span class="small" style="color:#15803D">较昨日 +4</span></div>
-<div class="stat"><span class="muted">今日失败</span><span class="v">1</span><a class="small" href="jobs.html">查看原因</a></div>
-<div class="stat"><span class="muted">累计多做种</span><span class="v">3.4 TB</span><span class="small muted">不占用额外磁盘空间</span></div>
-<div class="stat"><span class="muted">xseed 加入的种子</span><span class="v">286</span><span class="small muted">都带 xseed 标签</span></div>
+<section class="card" aria-labelledby="hero-h">
+<h2 id="hero-h" class="sr">今日辅种</h2>
+<div class="hero">
+<div>
+<div class="hero-num"><span class="k">今天帮你多做种</span><span class="v">12<small>个 · 186 GB</small></span><span class="delta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>比昨天多 4 个</span></div>
+<div class="hero-meta">
+<div><b>3.4 TB</b><span>累计多做种</span></div>
+<div><b>286</b><span>xseed 加入的种子</span></div>
+<div><b>0 B</b><span>额外占用磁盘</span></div>
+</div>
+</div>
+<div class="bars">
+<div class="bars-plot" role="img" aria-label="最近 14 天每天辅种成功数，今天 12 个，最多一天 14 个">
+<div class="gl" style="bottom:33.3%"><span>5</span></div><div class="gl" style="bottom:66.6%"><span>10</span></div>
+<div class="bar" style="--h:33.3%"><i style="height:33.3%"></i><span class="tip">10月26日 · 5 个</span></div><div class="bar" style="--h:53.3%"><i style="height:53.3%"></i><span class="tip">10月27日 · 8 个</span></div><div class="bar" style="--h:20.0%"><i style="height:20.0%"></i><span class="tip">10月28日 · 3 个</span></div><div class="bar" style="--h:60.0%"><i style="height:60.0%"></i><span class="tip">10月29日 · 9 个</span></div><div class="bar" style="--h:73.3%"><i style="height:73.3%"></i><span class="tip">10月30日 · 11 个</span></div><div class="bar" style="--h:40.0%"><i style="height:40.0%"></i><span class="tip">10月31日 · 6 个</span></div><div class="bar" style="--h:46.7%"><i style="height:46.7%"></i><span class="tip">11月1日 · 7 个</span></div><div class="bar" style="--h:66.7%"><i style="height:66.7%"></i><span class="tip">11月2日 · 10 个</span></div><div class="bar" style="--h:26.7%"><i style="height:26.7%"></i><span class="tip">11月3日 · 4 个</span></div><div class="bar" style="--h:80.0%"><i style="height:80.0%"></i><span class="tip">11月4日 · 12 个</span></div><div class="bar" style="--h:60.0%"><i style="height:60.0%"></i><span class="tip">11月5日 · 9 个</span></div><div class="bar" style="--h:53.3%"><i style="height:53.3%"></i><span class="tip">11月6日 · 8 个</span></div><div class="bar" style="--h:93.3%"><i style="height:93.3%"></i><span class="tip">11月7日 · 14 个</span></div><div class="bar today" style="--h:80.0%"><i style="height:80.0%"></i><span class="tip">11月8日 · 12 个</span></div>
+</div>
+<div class="bars-x"><span>10月26日</span><span>11月1日</span><span>今天</span></div>
+<table class="sr"><caption>最近 14 天每天辅种成功数</caption><tbody><tr><td>10月26日</td><td>5</td></tr><tr><td>10月27日</td><td>8</td></tr><tr><td>10月28日</td><td>3</td></tr><tr><td>10月29日</td><td>9</td></tr><tr><td>10月30日</td><td>11</td></tr><tr><td>10月31日</td><td>6</td></tr><tr><td>11月1日</td><td>7</td></tr><tr><td>11月2日</td><td>10</td></tr><tr><td>11月3日</td><td>4</td></tr><tr><td>11月4日</td><td>12</td></tr><tr><td>11月5日</td><td>9</td></tr><tr><td>11月6日</td><td>8</td></tr><tr><td>11月7日</td><td>14</td></tr><tr><td>11月8日</td><td>12</td></tr></tbody></table>
+</div>
+</div>
 </section>
 
-<div class="row">
-<section class="card" style="flex: 3 1 480px; gap: 4px" aria-labelledby="recent-h">
-<div class="card-head" style="padding-bottom: 8px"><h2 id="recent-h">最近辅种</h2><a class="small" href="jobs.html">查看全部</a></div>
-<div class="list-row"><div class="grow"><span class="ellipsis" style="font-weight:500">Ocean.Planet.S01.2160p.WEB-DL.DDP5.1.H.265</span><span class="small muted">站点 Y · 14:02</span></div><span class="badge ok">做种中</span></div>
-<div class="list-row"><div class="grow"><span class="ellipsis" style="font-weight:500">Mountain.Light.2021.1080p.BluRay.x264</span><span class="small muted">站点 Z · 13:47</span></div><span class="badge ok">做种中</span></div>
-<div class="list-row"><div class="grow"><span class="ellipsis" style="font-weight:500">City.Nights.Live.2018.FLAC</span><span class="small muted">站点 Y · 13:20</span></div><span class="badge info">等待启动</span></div>
-<div class="list-row"><div class="grow"><span class="ellipsis" style="font-weight:500">Quiet.Harbor.2020.1080p.WEB-DL.AAC</span><span class="small muted">站点 W · 12:55</span></div><span class="badge err">失败</span></div>
-<div class="list-row"><div class="grow"><span class="ellipsis" style="font-weight:500">Desert.Road.2017.2160p.UHD.BluRay.HEVC</span><span class="small muted">站点 V · 11:31</span></div><span class="badge ok">做种中</span></div>
+<div class="grid">
+<section class="card span-7" aria-labelledby="recent-h" style="gap:4px">
+<div class="card-head" style="padding-bottom:6px"><div><h2 id="recent-h">最近辅种</h2><p class="sub">新种子直接指向已有文件</p></div><a class="small" href="jobs.html">查看全部</a></div>
+<div class="divide">
+<div class="feed-item"><span class="av sm y">Y</span><div class="grow"><span class="name">Ocean.Planet.S01.2160p.WEB-DL.DDP5.1.H.265</span><span class="meta">辅到站点 Y · 48.2 GB · 14:02</span></div><span class="chip ok">做种中</span></div>
+<div class="feed-item"><span class="av sm z">Z</span><div class="grow"><span class="name">Mountain.Light.2021.1080p.BluRay.x264</span><span class="meta">辅到站点 Z · 12.8 GB · 13:47</span></div><span class="chip ok">做种中</span></div>
+<div class="feed-item"><span class="av sm y">Y</span><div class="grow"><span class="name">City.Nights.Live.2018.FLAC</span><span class="meta">辅到站点 Y · 1.9 GB · 13:20</span></div><span class="chip info">约 6 分钟后启动</span></div>
+<div class="feed-item"><span class="av sm w">W</span><div class="grow"><span class="name">Quiet.Harbor.2020.1080p.WEB-DL.AAC</span><span class="meta">辅到站点 W · 6.4 GB · 12:55</span></div><span class="chip err">登录失效</span></div>
+<div class="feed-item"><span class="av sm v">V</span><div class="grow"><span class="name">Desert.Road.2017.2160p.UHD.BluRay.HEVC</span><span class="meta">辅到站点 V · 61.0 GB · 11:31</span></div><span class="chip ok">做种中</span></div>
+</div>
 </section>
 
-<section class="card" style="flex: 2 1 300px" aria-labelledby="quota-h">
-<h2 id="quota-h">各站今日额度</h2>
-<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between"><span style="font-weight:500">站点 Y</span><span class="muted num">7 / 50</span></div><div class="bar"><i style="width:14%"></i></div></div>
-<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between"><span style="font-weight:500">站点 Z</span><span class="muted num">4 / 50</span></div><div class="bar"><i style="width:8%"></i></div></div>
-<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between"><span style="font-weight:500">站点 V</span><span class="muted num">1 / 20</span></div><div class="bar"><i style="width:5%"></i></div></div>
-<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between"><span style="font-weight:500">站点 W</span><span style="color:#B45309">需要处理</span></div><div class="bar"></div></div>
-<p class="small muted">额度每天 0 点重置，可在站点页调整。</p>
+<section class="card span-5" aria-labelledby="quota-h" style="gap:6px">
+<div class="card-head" style="padding-bottom:6px"><div><h2 id="quota-h">各站今日额度</h2><p class="sub">每天 0 点重置</p></div><a class="small" href="sites.html">调整</a></div>
+<div class="quota"><span class="av sm y">Y</span><div class="grow"><div class="top"><span>站点 Y</span><span class="muted num">7 / 50</span></div><div class="meter"><i style="width:14%"></i></div></div></div>
+<div class="quota"><span class="av sm z">Z</span><div class="grow"><div class="top"><span>站点 Z</span><span class="muted num">4 / 50</span></div><div class="meter"><i style="width:8%"></i></div></div></div>
+<div class="quota"><span class="av sm v">V</span><div class="grow"><div class="top"><span>站点 V</span><span class="muted num">1 / 20</span></div><div class="meter"><i style="width:5%"></i></div></div></div>
+<div class="quota"><span class="av sm w">W</span><div class="grow"><div class="top"><span>站点 W</span><span class="chip warn" style="height:22px">已暂停</span></div><div class="meter"></div></div></div>
 </section>
 </div>
 </main>
