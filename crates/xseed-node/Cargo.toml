@@ -1,0 +1,28 @@
+[package]
+name = "xseed-node"
+description = "xseed 社区节点：信箱、代号、桶索引、两跳网关与节点间转发"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+xseed-core = { path = "../xseed-core" }
+xseed-transport = { path = "../xseed-transport" }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "signal", "fs", "net"] }
+axum = { version = "0.8", features = ["ws"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_bytes = "0.11.15"
+ciborium = "0.2"
+toml = "0.8"
+hex = "0.4"
+rand = "0.8"
+ed25519-dalek = "2"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+
+[dev-dependencies]
+tempfile = "3"

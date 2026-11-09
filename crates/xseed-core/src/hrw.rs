@@ -4,7 +4,7 @@ use sha2::{Digest, Sha256};
 
 #[derive(Debug, Clone)]
 pub struct NodeInfo {
-    pub id: [u8; 32],
+    pub id: [u8; 16],
     /// 有效权重 = 清单权重 × 上线爬坡系数，必须 > 0。
     pub weight: f64,
 }
@@ -37,7 +37,7 @@ mod tests {
     use super::*;
 
     fn nodes(n: usize) -> Vec<NodeInfo> {
-        (0..n).map(|i| NodeInfo { id: [i as u8; 32], weight: 1.0 }).collect()
+        (0..n).map(|i| NodeInfo { id: [i as u8; 16], weight: 1.0 }).collect()
     }
 
     #[test]

@@ -333,7 +333,7 @@ async fn status(State(app): State<Shared>) -> Res {
         "stats": stats,
         "scan": app.scan.lock().unwrap().clone(),
         "downloader": cfg.downloaders.first().map(|d| json!({"kind": d.kind, "url": d.url, "user": d.user, "status": dl.as_ref().map(|x| &x.0), "ok": dl.as_ref().map(|x| x.1)})),
-        "network": {"state": "not_available", "entry": null},
+        "network": network_json(&app),
         "dry_run": cfg.dry_run,
         "respond": cfg.respond,
         "today": {"added": 0, "size": 0},
@@ -341,6 +341,15 @@ async fn status(State(app): State<Shared>) -> Res {
         "alerts": alerts,
         "ptd": app.ptd_last.lock().unwrap().clone(),
     }))
+}
+
+fn network_json(app: &Shared) -> Value {
+    let st = app.net.status.lock().unwrap().clone();
+    let (discovered, peers) = crate::network::Net::discovered(&app.db);
+    let mut v = serde_json::to_value(st).unwrap_or_default();
+    v["discovered"] = json!(discovered);
+    v["peers"] = json!(peers);
+    v
 }
 
 async fn list_sites(State(app): State<Shared>) -> Res {
@@ -513,7 +522,7 @@ async fn webdav(State(app): State<Shared>, ConnectInfo(addr): ConnectInfo<Socket
 async fn dry_run(State(app): State<Shared>) -> Res {
     let stats = inventory::stats(&app.db);
     let sites = sites::list(&app.db, &app.vault);
-    ok(json!({"stats": stats, "sites": sites, "network": "not_available", "candidates": null}))
+    ok(json!({"stats": stats, "sites": sites, "network": network_json(&app), "candidates": null}))
 }
 
 async fn dry_run_confirm(State(app): State<Shared>) -> Res {
@@ -539,7 +548,7 @@ async fn get_config(State(app): State<Shared>) -> Res {
     let c = app.cfg();
     ok(json!({
         "respond": c.respond, "daily_add_limit": c.daily_add_limit, "daily_answer_limit": c.daily_answer_limit,
-        "log_level": c.log_level, "pin_entry": c.pin_entry, "dry_run": c.dry_run,
+        "log_level": c.log_level, "pin_entry": c.pin_entry, "dry_run": c.dry_run, "registry": c.registry,
         "admin_changed_at": app.db.meta_get("admin_changed_at").and_then(|s| s.parse::<i64>().ok()),
     }))
 }
@@ -551,6 +560,7 @@ struct ConfigBody {
     daily_answer_limit: Option<u32>,
     log_level: Option<String>,
     pin_entry: Option<String>,
+    registry: Option<String>,
 }
 
 async fn put_config(State(app): State<Shared>, Json(b): Json<ConfigBody>) -> Res {
@@ -571,7 +581,14 @@ async fn put_config(State(app): State<Shared>, Json(b): Json<ConfigBody>) -> Res
         next.log_level = v;
     }
     if let Some(v) = b.pin_entry {
-        next.pin_entry = v;
+        next.pin_entry = v.trim().to_string();
+    }
+    if let Some(v) = b.registry {
+        let v = v.trim().to_string();
+        if !(v.is_empty() || v.starts_with("http://") || v.starts_with("https://") || v.starts_with('/')) {
+            return Err(bad("节点清单需填写 http(s) 地址或绝对路径"));
+        }
+        next.registry = v;
     }
     next.validate().map_err(bad)?;
     app.update_cfg(|c| *c = next)?;

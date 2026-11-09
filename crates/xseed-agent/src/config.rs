@@ -55,7 +55,33 @@ pub struct Config {
     pub daily_answer_limit: u32,
     pub setup_done: bool,
     pub log_level: String,
+    /// 固定入口节点（node_id）；为空时自动选择延迟最低的节点。
     pub pin_entry: String,
+    /// 节点清单：http(s) 地址或本地文件。为空时不连接辅种网络。
+    pub registry: String,
+    pub net: NetTuning,
+}
+
+/// 辅种网络节奏（一般不需要修改）。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
+pub struct NetTuning {
+    /// 每轮登记分散在多长时间内发出（秒）。
+    pub register_spread_secs: u64,
+    /// 首次登记的分散时间（秒）。
+    pub first_register_spread_secs: u64,
+    /// 同一内容多久重新查询一次（秒）。
+    pub lookup_every_secs: u64,
+    /// 每个内容最多探测几个候选持有者。
+    pub probes_per_content: usize,
+    /// 两次探测之间的最小间隔（毫秒）。
+    pub probe_gap_ms: u64,
+}
+
+impl Default for NetTuning {
+    fn default() -> Self {
+        NetTuning { register_spread_secs: 86_400, first_register_spread_secs: 600, lookup_every_secs: 86_400, probes_per_content: 8, probe_gap_ms: 1_500 }
+    }
 }
 
 impl Default for Config {
@@ -71,6 +97,8 @@ impl Default for Config {
             setup_done: false,
             log_level: "info".into(),
             pin_entry: String::new(),
+            registry: String::new(),
+            net: NetTuning::default(),
         }
     }
 }

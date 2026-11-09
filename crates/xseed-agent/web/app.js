@@ -125,12 +125,22 @@ function shell(active, inner, side = {}) {
       <nav class="nav" aria-label="主导航">${nav}</nav>
       <div class="side-status">
         <div><span class="dot ${dl ? (dl.ok === false ? 'err' : 'ok') : ''}"></span><span>${esc(dl ? (dl.ok === false ? '下载器连接失败' : (dl.status || '下载器')) : '下载器')}</span></div>
-        <div><span class="dot"></span><span>辅种网络</span><span style="margin-left:auto" class="tiny">即将开放</span></div>
+        ${netLine(side.network)}
       </div>
     </aside>
     <main class="main" id="main"><div class="wrap${side.narrow ? ' narrow' : ''}">${inner}</div></main>
   </div>`;
 }
+
+// 网络状态：off（未完成设置）| no_registry | connecting | online | error
+const NET = { online: ['ok', '辅种网络'], connecting: ['warn', '正在连接辅种网络'], error: ['err', '辅种网络连不上'], no_registry: ['', '辅种网络'], off: ['', '辅种网络'] };
+function netLine(n) {
+  const st = (n && n.state) || 'off';
+  const [dot, text] = NET[st] || NET.off;
+  const tail = st === 'online' ? (n.entry ? n.entry.host : '') : st === 'no_registry' ? '未配置' : st === 'off' ? '' : '';
+  return `<div><span class="dot ${dot}"></span><span>${text}</span><span style="margin-left:auto;max-width:96px" class="tiny trunc">${esc(tail)}</span></div>`;
+}
+const netOn = (n) => n && (n.state === 'online' || n.state === 'connecting');
 
 /* ───────── 路由 ───────── */
 const ROUTES = {
@@ -192,6 +202,12 @@ async function pageOverview() {
     ? `<section class="banner warn" aria-label="需要处理">${I.warn}<p><b>${esc(a.site)} 需要 Cookie 才能下载种子。</b><span> 用 PT-depiler 同步，或在站点页手动填写。</span></p><a class="btn sm ghost" href="#/sites" style="border-color:currentColor;color:var(--warn)">去处理</a></section>`
     : `<section class="banner err" aria-label="需要处理">${I.warn}<p><b>连不上下载器。</b><span> 请检查下载器是否在运行、地址和密码是否正确。${esc(a.detail || '')}</span></p><a class="btn sm ghost" href="#/settings" style="border-color:currentColor;color:var(--err)">去设置</a></section>`).join('');
   const scanning = st.scan && st.scan.running;
+  const net = st.network || {};
+  const live = netOn(net);
+  const pipeNote = net.state === 'online' ? `今天探测 ${fmtN(net.probes_today)} 次；社区里找到 ${fmtN(net.peers)} 个同款持有者。会员答题与自动加种将在后续版本开放`
+    : net.state === 'connecting' ? '正在连接辅种网络…'
+    : net.state === 'error' ? `辅种网络暂时连不上：${net.error || ''}`
+    : net.state === 'no_registry' ? '还没有配置社区节点，可在“设置”中填写节点清单' : '完成设置后开始连接辅种网络';
   const steps = [['01', '发现同款文件', '社区里有人有同样的文件'], ['02', '会员题通过', '对方证明了是该站会员'], ['03', '下载种子', '用你自己的账号下载'], ['04', '校验一致', '文件列表逐个比对'], ['05', '开始做种', '直接用已有文件']];
   root.innerHTML = shell('#/', `
     <div class="row" style="justify-content:space-between">
@@ -202,7 +218,7 @@ async function pageOverview() {
       <div class="hero-l">
         <h1 id="hero-h" style="font-size:15px;font-weight:500;color:var(--ink2)">你的 NAS 里，有 <b style="color:var(--ink);font-weight:600">${fmtN(s.sites)} 个站</b> 的种子</h1>
         <div class="row" style="align-items:flex-end;gap:14px"><span class="big${s.ok >= 10000 ? ' sm' : ''}">${fmtN(s.ok)}</span><span style="display:flex;flex-direction:column;padding-bottom:4px;font-size:13px" class="muted"><span>个种子</span><span class="mono" style="color:var(--ink)">${fmtSize(s.total_size)}</span></span></div>
-        <p class="muted" style="max-width:400px">辅种网络开放后，xseed 会帮这些文件在更多站点做种——<span style="color:var(--ink)">多做种，不多占一个字节。</span></p>
+        <p class="muted" style="max-width:400px">${live && net.discovered ? `其中 <b style="color:var(--ink)">${fmtN(net.discovered)}</b> 个已在社区里找到同款。` : ''}xseed 会帮这些文件在更多站点做种——<span style="color:var(--ink)">多做种，不多占一个字节。</span></p>
         <dl class="kv3">
           <div><dt>可以回答别人</dt><dd>${fmtN(s.holders)}</dd></div>
           <div><dt>已在多站做种</dt><dd>${fmtN(s.multi_site)}</dd></div>
@@ -212,8 +228,8 @@ async function pageOverview() {
       <div class="hero-r">${orbit({ planets: sitePlanets(sites), core: ['你的 NAS', fmtN(s.ok) + ' 种'], label: '星轨：' + sites.map((x) => x.name + (x.enabled ? '（参与）' : '（未开启）')).join('、') })}</div>
     </section>
     <section class="card" aria-labelledby="pipe-h">
-      <div class="card-head"><h2 id="pipe-h">一个辅种是怎么来的</h2><span class="small faint">辅种网络将在后续版本开放，届时这里显示每天的真实数字</span></div>
-      <ol class="pipe">${steps.map(([no, t, d]) => `<li><span class="mono tiny faint">${no}</span><div class="row" style="justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:500">${t}</span><span class="mono" style="font-size:22px;color:var(--ink3)">—</span></div><div class="bar"></div><span class="tiny faint">${d}</span></li>`).join('')}</ol>
+      <div class="card-head"><h2 id="pipe-h">一个辅种是怎么来的</h2><span class="small faint">${pipeNote}</span></div>
+      <ol class="pipe">${steps.map(([no, t, d], i) => { const v = i === 0 && live ? net.discovered : null; return `<li><span class="mono tiny faint">${no}</span><div class="row" style="justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:500">${t}</span><span class="mono" style="font-size:22px;color:var(${v ? '--ink' : '--ink3'})">${v === null ? '—' : fmtN(v)}</span></div><div class="bar">${v ? `<i style="width:${Math.max(4, Math.min(100, Math.round(v / Math.max(s.ok, 1) * 100)))}%"></i>` : ''}</div><span class="tiny faint">${d}</span></li>`; }).join('')}</ol>
     </section>
     ${alerts}
     <div class="cols">
@@ -230,7 +246,7 @@ async function pageOverview() {
           <div><dt>无法读取文件列表</dt><dd class="mono">${fmtN(s.invalid)}</dd></div>
         </dl>
       </section>
-    </div>`, { downloader: st.downloader });
+    </div>`, { downloader: st.downloader, network: st.network });
   actions.rescan = async () => { await api('POST', '/scan'); toast('开始重新扫描'); setTimeout(route, 600); };
   if (scanning) timer = setInterval(() => { if ((location.hash || '#/') === '#/') pageOverview().catch(() => {}); }, 2500);
 }
@@ -291,7 +307,7 @@ async function pageSites() {
         <form class="field" data-submit="ptdKey"><label for="ptd-key" class="tiny faint" style="font-weight:400">加密密钥（推荐，与 PT-depiler 备份设置里的一致）</label>
           <div class="row" style="gap:8px;flex-wrap:nowrap"><input class="input" id="ptd-key" type="password" autocomplete="off" placeholder="${ptd.has_key ? '已设置，留空不修改' : '未设置'}"><button class="btn" type="submit">保存</button></div></form>
       </div>
-    </div></section>`, { downloader: st.downloader });
+    </div></section>`, { downloader: st.downloader, network: st.network });
   actions.toggle = async (ref, el) => {
     const next = el.getAttribute('aria-checked') !== 'true';
     await api('PUT', '/sites/' + encodeURIComponent(ref), { enabled: next });
@@ -323,7 +339,7 @@ async function pageJobs() {
       <section class="dashed row" aria-labelledby="danger-h" style="justify-content:space-between">
         <div class="grow"><h2 id="danger-h" style="font-size:15px;font-weight:600">想全部撤回？</h2><p class="muted">从下载器移除 xseed 加入的全部种子。文件不会被删除，原来的种子不受影响。</p></div>
         <button class="btn danger" data-act="removeAll">全部移除…</button>
-      </section>`, { downloader: st.downloader });
+      </section>`, { downloader: st.downloader, network: st.network });
   };
   draw();
   actions.tab = (k) => { tab = k; draw(); };
@@ -338,6 +354,7 @@ async function pageJobs() {
 async function pageSettings() {
   const [c, st] = await Promise.all([api('GET', '/config'), api('GET', '/status')]);
   const d = st.downloader || {};
+  const net = st.network || {};
   let add = c.daily_add_limit, ans = c.daily_answer_limit;
   const stepper = (key, label, hint, v) => `<div class="setting"><div class="grow"><b style="font-weight:600">${label}</b><div class="small faint">${hint}</div></div>
     <div class="stepper" role="group" aria-label="${label}"><button type="button" aria-label="减少" data-act="step" data-arg="${key}:-">−</button><output id="out-${key}" aria-live="polite">${v}</output><button type="button" aria-label="增加" data-act="step" data-arg="${key}:+">+</button></div></div>`;
@@ -347,7 +364,7 @@ async function pageSettings() {
       <div class="grow" style="position:relative;display:flex;flex-direction:column;gap:8px;flex-basis:380px">
         <h2 id="give-h" style="font-size:22px;font-weight:700;letter-spacing:-.02em">${c.respond ? '你正在帮别人找到辅种' : '你暂时只为自己辅种'}</h2>
         <p class="muted" style="max-width:520px">别人有同样的文件、并答对了该站会员题，你的小助手才告诉他种子编号。你帮的人越多，社区里能帮你的人也越多。</p>
-        <span class="mono small faint">${c.respond ? '辅种网络开放后开始生效' : '关掉后你能找到的辅种会变少'}</span>
+        <span class="mono small faint">${!c.respond ? '关掉后你能找到的辅种会变少' : net.state === 'online' ? `本周登记了 ${fmtN(net.holders)} 个持有者代号，今天回应了 ${fmtN(net.answered_today)} 次探测` : '连上辅种网络后开始生效'}</span>
       </div>
       <button type="button" class="switch big" role="switch" aria-checked="${c.respond}" aria-label="帮别人找到辅种" data-act="respond" style="position:relative"></button>
     </section>
@@ -358,8 +375,10 @@ async function pageSettings() {
     <section class="card divide" style="padding:4px 28px" aria-label="连接与安全">
       <div class="setting"><div class="grow"><h2>下载器</h2><span class="mono small faint">${esc((d.status || '') + ' · ' + (d.url || '') + ' · ' + (d.user || ''))}</span></div>
         <span class="status ${d.ok === false ? 'err-t' : 'ok-t'}"><span class="dot ${d.ok === false ? 'err' : 'ok'}"></span>${d.ok === false ? '连接失败' : '已连接'}</span><a class="btn sm" href="#/setup/2?edit=1">修改</a></div>
-      <div class="setting"><div class="grow"><label for="entry" style="font-weight:600">入口节点</label><div class="small faint">消息都经它转发：它知道你的 IP，看不到内容。辅种网络开放后可选。</div></div>
-        <select id="entry" class="input" style="flex:0 1 240px;height:40px" disabled><option>自动</option></select></div>
+      <div class="setting"><div class="grow"><label for="entry" style="font-weight:600">入口节点</label><div class="small faint">消息都经它转发：它知道你的 IP，看不到内容。${net.entry ? `当前：<span class="mono">${esc(net.entry.host)}</span>` : ''}</div></div>
+        <select id="entry" class="input" style="flex:0 1 240px;height:40px" ${(net.nodes || []).length ? '' : 'disabled'}><option value="">自动（延迟最低）</option>${(net.nodes || []).map((x) => `<option value="${esc(x.id)}" ${c.pin_entry === x.id ? 'selected' : ''}>${esc(x.host)}${x.ok ? (x.rtt_ms != null ? ' · ' + x.rtt_ms + ' ms' : '') : ' · 不可用'}</option>`).join('')}</select></div>
+      <form class="setting" data-submit="registry"><div class="grow"><label for="registry" style="font-weight:600">社区节点清单</label><div class="small faint">${net.state === 'online' ? `已连接 ${(net.nodes || []).filter((x) => x.ok).length} / ${(net.nodes || []).length} 个节点` : net.state === 'error' ? `<span class="err-t">${esc(net.error || '')}</span>` : '官方清单将在正式发布时内置；测试阶段可填写自建节点清单的地址'}</div></div>
+        <input class="input mono" id="registry" value="${esc(c.registry || '')}" placeholder="https://… /registry.json" autocomplete="off" style="flex:0 1 300px;height:40px"><button class="btn sm" type="submit">保存</button></form>
       <div class="setting"><div class="grow"><b style="font-weight:600" class="muted">加种前抽查文件</b><div class="small faint">需要给小助手映射数据目录。默认不读硬盘，直接信任下载器的做种状态。</div></div>
         <button type="button" class="switch" role="switch" aria-checked="false" aria-label="加种前抽查文件" disabled></button></div>
       <div class="setting"><div class="grow"><label for="theme" style="font-weight:600">外观</label><div class="small faint">只保存在这台浏览器里</div></div>
@@ -369,8 +388,11 @@ async function pageSettings() {
         <label class="sr" for="pw-new">新密码</label><input class="input" id="pw-new" type="password" placeholder="新密码（≥8 位）" autocomplete="new-password" style="flex:0 1 180px;height:40px">
         <button class="btn sm" type="submit">修改密码</button></form>
       <div class="setting"><div class="grow"><b style="font-weight:600">退出登录</b><div class="small faint">xseed ${esc(S.session.version)}</div></div><button class="btn sm ghost" data-act="logout">退出</button></div>
-    </section>`, { narrow: true, downloader: st.downloader });
+    </section>`, { narrow: true, downloader: st.downloader, network: st.network });
   const sel = document.getElementById('theme'); sel.value = getTheme(); sel.addEventListener('change', () => setTheme(sel.value));
+  const ent = document.getElementById('entry');
+  ent.addEventListener('change', () => api('PUT', '/config', { pin_entry: ent.value }).then(() => toast(ent.value ? '已固定入口节点' : '已改为自动选择')).catch((e) => toast(e.message)));
+  actions.registry = async () => { await api('PUT', '/config', { registry: val('registry') }); toast('已保存，正在连接…'); setTimeout(pageSettings, 1500); };
   actions.step = (arg) => {
     const [k, dir] = arg.split(':');
     if (k === 'add') { add = Math.max(10, Math.min(500, add + (dir === '+' ? 10 : -10))); document.getElementById('out-add').textContent = add; }
@@ -563,7 +585,7 @@ async function setupDryRun() {
     <dl class="kv3" style="border:1px solid var(--line);border-radius:14px;gap:1px;background:var(--line);overflow:hidden;padding:0;margin:0">
       ${[['本机种子', fmtN(s.ok)], ['参与站点', on.length + ' 站'], ['额外占用', '0 B']].map(([k, v]) => `<div style="background:var(--panel);padding:16px 18px"><dt>${k}</dt><dd style="font-size:26px;letter-spacing:-.03em">${v}</dd></div>`).join('')}
     </dl>
-    <p class="banner note" style="margin:0"><span class="dot"></span><span>辅种网络将在后续版本开放。开放后，这一步会显示“还能辅多少个、辅到哪些站”。现在开始，小助手会先保持本机清单最新。</span></p>
+    <p class="banner note" style="margin:0"><span class="dot"></span><span>${r.network && r.network.state === 'no_registry' ? '还没有配置社区节点。点亮星轨后，可以在“设置”里填写节点清单。' : '点亮星轨后，小助手会连上辅种网络：登记你的文件指纹，并找出社区里有同款的人。会员答题与自动加种将在后续版本开放。'}</span></p>
     <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">
       ${['新种子直接指向你已有的文件——<b>不复制、不移动、不删除</b>', '每站每天最多加 50 个，启动时间随机错开', '都带 <code class="mono" style="padding:1px 6px;border-radius:4px;background:var(--panel2)">xseed</code> 标签，随时可以在“辅种记录”里一键撤回'].map((t, i) => `<li class="row" style="gap:12px;flex-wrap:nowrap;align-items:baseline"><span class="mono tiny faint" aria-hidden="true">0${i + 1}</span><span>${t}</span></li>`).join('')}
     </ul>

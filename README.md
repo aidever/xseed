@@ -8,7 +8,7 @@
 - **不动你的文件**：新种子直接指向已有文件，跳过校验；不复制、不移动、不删除。
 - **小白可用**：只需填写下载器，站点自动识别；可从 PT-depiler 经 WebDAV 同步各站 Cookie。
 
-> **当前进度：M1「本机可用」**——能连接下载器、识别站点、从 PT-depiler 同步凭证，并在 Web UI 中看到自己的库。辅种网络（登记、询问、答题、自动加种）在 M2–M4 中开放，见[开发计划](docs/04-开发计划.md)。
+> **当前进度：M2「辅种网络」**——小助手能连接下载器、识别站点、从 PT-depiler 同步凭证；连上社区节点后，匿名登记文件指纹，并找出社区里有同款文件的人。会员答题（M3）与自动加种（M4）尚未开放，见[开发计划](docs/04-开发计划.md)。
 
 ![概览](docs/ui/m1/overview.png)
 
@@ -38,15 +38,27 @@ XSEED_DATA=./data ./target/release/xseed-agent
 |---|---|---|
 | `XSEED_DATA` | `data` | 数据目录：配置 `xseed-agent.toml`、数据库、加密密钥 `vault.key` |
 | `XSEED_LISTEN` | `0.0.0.0:7731` | Web UI 监听地址（覆盖配置文件） |
+| `XSEED_REGISTRY` | 空 | 社区节点清单（http(s) 地址或文件）；也可在“设置”页填写。官方清单在正式发布时内置 |
 
 忘记管理员密码：在小助手所在设备上运行 `xseed-agent reset-password`（Docker 中为 `docker exec xseed xseed-agent reset-password`），然后重新打开页面设置新密码。
+
+### 运行社区节点
+
+```sh
+XSEED_NODE_DATA=./node-data ./target/release/xseed-node manifest https://node.example.org   # 打印清单条目
+XSEED_NODE_DATA=./node-data XSEED_NODE_REGISTRY=https://…/registry.json ./target/release/xseed-node
+```
+
+节点默认监听 `0.0.0.0:7800`（明文 HTTP），请在前面放 Caddy / Nginx 终止 TLS，并在 `xseed-node.toml` 中开启 `trust_proxy`。1 核 1 GB 可服务约 1 万个在线小助手。Docker：`docker run --entrypoint xseed-node -v …:/data -p 7800:7800 ghcr.io/aidever/xseed:main`。
 
 ## 代码结构
 
 | 目录 | 说明 |
 |---|---|
 | `crates/xseed-core` | 与网络无关的算法：bencode、种子解析与文件列表规范化、文件指纹、桶、HRW、工作量证明、站点识别 |
-| `crates/xseed-agent` | 小助手：下载器适配（qBittorrent / Transmission）、清单扫描、凭证加密、PT-depiler WebDAV 接收端、Web API |
+| `crates/xseed-transport` | 社区节点协议：消息格式（CBOR）、HPKE 两跳封装、代号、信箱鉴权与节点签名、探测标签、节点清单、小助手侧客户端 |
+| `crates/xseed-node` | 社区节点：信箱长连接、代号签发、桶索引、两跳网关、节点间转发、限流、快照 |
+| `crates/xseed-agent` | 小助手：辅种网络（入口节点、登记、查询、探测）、下载器适配（qBittorrent / Transmission）、清单扫描、凭证加密、PT-depiler WebDAV 接收端、Web API |
 | `crates/xseed-agent/web` | Web UI（原生 JS，无构建步骤，编译时嵌入二进制） |
 
 ## 文档

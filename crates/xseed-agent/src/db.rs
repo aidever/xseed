@@ -31,6 +31,14 @@ CREATE TABLE IF NOT EXISTS aliases (
   alias BLOB PRIMARY KEY, node_tag INTEGER NOT NULL, purpose TEXT NOT NULL,
   downloader TEXT, hash TEXT, week INTEGER NOT NULL, used INTEGER NOT NULL DEFAULT 0
 );
+CREATE INDEX IF NOT EXISTS aliases_owner ON aliases(downloader, hash, week);
+-- 探测确认过的同款持有者（M2）：同一 SFP 的匿名地址，供 M3 会话使用
+CREATE TABLE IF NOT EXISTS peers (
+  sfp BLOB NOT NULL, node INTEGER NOT NULL, alias BLOB NOT NULL, week INTEGER NOT NULL, acked_at INTEGER NOT NULL,
+  PRIMARY KEY (sfp, alias)
+);
+-- 每个 SFP 最近一次查询
+CREATE TABLE IF NOT EXISTS lookups (sfp BLOB PRIMARY KEY, at INTEGER NOT NULL, hits INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS challenge_pool (
   site_ref TEXT NOT NULL, torrent_id TEXT NOT NULL, ih BLOB NOT NULL,
   fetched_at INTEGER NOT NULL, uses INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (site_ref, torrent_id)

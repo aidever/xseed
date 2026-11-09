@@ -25,6 +25,7 @@ pub struct App {
     pub ptd_last: Mutex<Option<SyncResult>>,
     /// 最近一次连接下载器的结果：（描述或错误, 是否成功）
     pub downloader_status: Mutex<Option<(String, bool)>>,
+    pub net: crate::network::Net,
 }
 
 pub type Shared = Arc<App>;
@@ -34,7 +35,13 @@ impl App {
         std::fs::create_dir_all(&dir)?;
         let db = Db::open(&dir.join("xseed-agent.db"))?;
         let vault = Vault::open(&dir, db.clone())?;
-        let cfg = Config::load(&dir)?;
+        let mut cfg = Config::load(&dir)?;
+        // 环境变量只在配置文件未设置时生效
+        if cfg.registry.is_empty() {
+            if let Ok(r) = std::env::var("XSEED_REGISTRY") {
+                cfg.registry = r;
+            }
+        }
         let ptd_last = db.meta_get("ptd_last").and_then(|s| serde_json::from_str(&s).ok());
         Ok(Arc::new(App {
             dir,
@@ -48,6 +55,7 @@ impl App {
             scan_lock: Default::default(),
             ptd_last: Mutex::new(ptd_last),
             downloader_status: Mutex::new(None),
+            net: Default::default(),
         }))
     }
 
@@ -58,7 +66,11 @@ impl App {
     pub fn update_cfg(&self, f: impl FnOnce(&mut Config)) -> Result<()> {
         let mut c = self.cfg.write().unwrap();
         f(&mut c);
-        c.save(&self.dir)
+        c.save(&self.dir)?;
+        drop(c);
+        // 配置变化（完成设置、节点清单、入口节点）立即生效
+        self.net.kick.notify_one();
+        Ok(())
     }
 
     pub fn client(&self, id: &str) -> Result<Client> {

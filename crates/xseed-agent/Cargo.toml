@@ -6,6 +6,7 @@ license.workspace = true
 
 [dependencies]
 xseed-core = { path = "../xseed-core" }
+xseed-transport = { path = "../xseed-transport" }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "signal", "sync", "net"] }
 axum = { version = "0.8", features = ["multipart"] }
 tower-http = { version = "0.6", features = ["set-header"] }
