@@ -40,6 +40,8 @@ struct Row {
     torrent_id: Option<String>,
     state: &'static str,
     reason: Option<String>,
+    /// 私有 tracker 使用 http://（站点可能只有 http，下载种子时允许回退）
+    tracker_http: bool,
 }
 
 fn known(db: &Db, downloader: &str, hash: &str) -> bool {
@@ -89,6 +91,7 @@ async fn analyze(client: &Client, t: &LocalTorrent, defs: &[SiteDef], public: &s
         torrent_id: None,
         state: "invalid",
         reason: None,
+        tracker_http: false,
     };
     if t.broken {
         row.reason = Some("missing_files".into());
@@ -122,6 +125,7 @@ async fn analyze(client: &Client, t: &LocalTorrent, defs: &[SiteDef], public: &s
         comment = client.comment(t).await.ok().flatten();
     }
     row.hosts = trackers.iter().filter_map(|u| xseed_core::site::normalize_tracker_host(u)).filter(|h| !public.contains(h)).collect::<std::collections::BTreeSet<_>>().into_iter().collect();
+    row.tracker_http = trackers.iter().any(|u| u.starts_with("http://") && xseed_core::site::normalize_tracker_host(u).is_some_and(|h| !public.contains(&h)));
     match identify(&trackers, defs, public) {
         Identified::One(sr) => {
             if let (Some(text), SiteRef::Site(id)) = (&comment, &sr) {
@@ -198,6 +202,12 @@ fn upsert(db: &Db, downloader: &str, r: &Row, at: i64) -> Result<()> {
             at
         ],
     )?;
+    if let (true, Some(sr)) = (r.tracker_http, &sref) {
+        db.lock().execute(
+            "INSERT OR REPLACE INTO site_traits(site_ref, trait, value, learned_at, expires_at) VALUES(?1, 'tracker_scheme', 'http', ?2, ?3)",
+            params![sr, at, at + 365 * 86_400],
+        )?;
+    }
     Ok(())
 }
 

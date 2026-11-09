@@ -1,0 +1,17 @@
+[package]
+name = "xseed-session"
+description = "xseed 会话：Noise XXpsk3 握手、会话消息、通道绑定的答题（不含 IO）"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+snow = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_bytes = "0.11.15"
+ciborium = "0.2"
+hkdf = "0.12"
+hmac = "0.12"
+sha2 = "0.10"
+subtle = "2"
+thiserror = "2"

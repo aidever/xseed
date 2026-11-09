@@ -76,11 +76,18 @@ pub struct NetTuning {
     pub probes_per_content: usize,
     /// 两次探测之间的最小间隔（毫秒）。
     pub probe_gap_ms: u64,
+    /// 每个站点每分钟最多下载几个种子文件。
+    pub site_rate_per_min: u32,
+    /// 两次询问会话之间的随机间隔（秒，03 §1.5.3）。
+    pub session_gap_min_secs: u64,
+    pub session_gap_max_secs: u64,
+    /// 同一内容在同一站点询问无果后，多久再问（秒）。
+    pub ask_retry_secs: u64,
 }
 
 impl Default for NetTuning {
     fn default() -> Self {
-        NetTuning { register_spread_secs: 86_400, first_register_spread_secs: 600, lookup_every_secs: 86_400, probes_per_content: 8, probe_gap_ms: 1_500 }
+        NetTuning { register_spread_secs: 86_400, first_register_spread_secs: 600, lookup_every_secs: 86_400, probes_per_content: 8, probe_gap_ms: 1_500, site_rate_per_min: 2, session_gap_min_secs: 60, session_gap_max_secs: 1_800, ask_retry_secs: 7 * 86_400 }
     }
 }
 

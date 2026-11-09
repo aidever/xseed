@@ -349,6 +349,7 @@ fn network_json(app: &Shared) -> Value {
     let mut v = serde_json::to_value(st).unwrap_or_default();
     v["discovered"] = json!(discovered);
     v["peers"] = json!(peers);
+    v["offers"] = json!(app.db.lock().query_row("SELECT COUNT(*) FROM offers", [], |r| r.get::<_, i64>(0)).unwrap_or(0));
     v
 }
 
@@ -534,8 +535,41 @@ async fn dry_run_confirm(State(app): State<Shared>) -> Res {
     ok(json!({"ok": true}))
 }
 
-async fn jobs() -> Res {
-    ok(json!({"jobs": [], "counts": {"all": 0, "seeding": 0, "running": 0, "failed": 0}}))
+/// 辅种记录。M3 只有“已拿到种子编号”的告知；加种（M4）后补充后续步骤。
+async fn jobs(State(app): State<Shared>) -> Res {
+    let names: std::collections::HashMap<String, String> = sites::list(&app.db, &app.vault).into_iter().map(|s| (s.site_ref, s.name)).collect();
+    let c = app.db.lock();
+    let mut st = c
+        .prepare(
+            "SELECT o.id, o.site_ref, o.torrent_id, o.size, o.received_at, o.status,
+                    (SELECT name FROM local_torrents lt WHERE lt.sfp=o.sfp ORDER BY lt.first_seen LIMIT 1)
+             FROM offers o ORDER BY o.received_at DESC LIMIT 500",
+        )
+        .map_err(anyhow::Error::from)?;
+    let rows: Vec<Value> = st
+        .query_map([], |r| {
+            let site_ref: String = r.get(1)?;
+            Ok(json!({
+                "id": r.get::<_, i64>(0)?,
+                "site_ref": site_ref,
+                "torrent_id": r.get::<_, String>(2)?,
+                "size": r.get::<_, i64>(3)?,
+                "at": r.get::<_, i64>(4)?,
+                "status": r.get::<_, String>(5)?,
+                "name": r.get::<_, Option<String>>(6)?.unwrap_or_default(),
+                "step": 2,
+            }))
+        })
+        .map_err(anyhow::Error::from)?
+        .filter_map(Result::ok)
+        .map(|mut v| {
+            let n = names.get(v["site_ref"].as_str().unwrap_or_default()).cloned();
+            v["site"] = json!(n.unwrap_or_else(|| v["site_ref"].as_str().unwrap_or_default().split_once(':').map(|x| x.1.to_string()).unwrap_or_default()));
+            v
+        })
+        .collect();
+    let n = rows.len();
+    ok(json!({"jobs": rows, "counts": {"all": n, "seeding": 0, "running": n, "failed": 0}}))
 }
 
 async fn remove_all(State(app): State<Shared>) -> Res {

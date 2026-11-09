@@ -53,12 +53,22 @@ pub struct NetStatus {
     pub acks_today: u64,
     /// 今天回应了多少次别人的探测
     pub answered_today: u64,
+    /// 今天发起的询问会话
+    pub sessions_today: u64,
+    /// 今天作为查询方答题次数
+    pub answers_today: u64,
+    /// 今天收到的告知（种子编号）
+    pub offers_today: u64,
+    /// 今天作为持有者接待的询问
+    pub served_today: u64,
+    /// 今天作为持有者告知了几次
+    pub offered_today: u64,
     pub day: u16,
 }
 
 impl Default for NetStatus {
     fn default() -> Self {
-        NetStatus { state: "off", error: None, entry: None, nodes: vec![], holders: 0, registered: 0, last_register_at: None, last_lookup_at: None, probes_today: 0, acks_today: 0, answered_today: 0, day: 0 }
+        NetStatus { state: "off", error: None, entry: None, nodes: vec![], holders: 0, registered: 0, last_register_at: None, last_lookup_at: None, probes_today: 0, acks_today: 0, answered_today: 0, sessions_today: 0, answers_today: 0, offers_today: 0, served_today: 0, offered_today: 0, day: 0 }
     }
 }
 
@@ -99,6 +109,13 @@ pub struct Net {
     register_running: tokio::sync::Mutex<()>,
     lookup_running: tokio::sync::Mutex<()>,
     pub kick: Notify,
+    /// 进行中的会话：sid → 消息通道
+    pub(crate) sessions: Mutex<HashMap<[u8; 16], mpsc::Sender<Envelope>>>,
+    pub(crate) responders: std::sync::atomic::AtomicUsize,
+    pub(crate) refilling: Mutex<HashSet<String>>,
+    pub(crate) asking: tokio::sync::Mutex<()>,
+    replies: Mutex<Vec<(u16, [u8; 16])>>,
+    last_pools: Mutex<u64>,
 }
 
 fn bump(st: &mut NetStatus, f: impl FnOnce(&mut NetStatus)) {
@@ -108,11 +125,46 @@ fn bump(st: &mut NetStatus, f: impl FnOnce(&mut NetStatus)) {
         st.probes_today = 0;
         st.acks_today = 0;
         st.answered_today = 0;
+        st.sessions_today = 0;
+        st.answers_today = 0;
+        st.offers_today = 0;
+        st.served_today = 0;
+        st.offered_today = 0;
     }
     f(st)
 }
 
 impl Net {
+    pub fn bump(&self, f: impl FnOnce(&mut NetStatus)) {
+        bump(&mut self.status.lock().unwrap(), f)
+    }
+
+    /// 当前入口的发送端与 node_tag。
+    pub fn sender(&self) -> Option<(mpsc::Sender<Envelope>, u32)> {
+        self.entry.lock().unwrap().as_ref().filter(|e| !e.2.is_closed()).map(|e| (e.2.clone(), e.0.tag()))
+    }
+
+    /// 取一个新的回信代号（批量向入口节点申请并缓存，只用本周的）。
+    pub async fn reply_alias(&self, app: &Shared) -> Result<[u8; 16]> {
+        let w = week(now());
+        let (entry, cred) = {
+            let e = self.entry.lock().unwrap();
+            let e = e.as_ref().ok_or_else(|| anyhow!("未连接入口节点"))?;
+            (e.0.clone(), e.1.clone())
+        };
+        {
+            let mut r = self.replies.lock().unwrap();
+            r.retain(|x| x.0 == w);
+            if let Some((_, a)) = r.pop() {
+                return Ok(a);
+            }
+        }
+        let got = app.net.client(&entry).aliases(&cred, 32).await?;
+        let mut r = self.replies.lock().unwrap();
+        r.extend(got.into_iter().map(|a| (w, a)));
+        r.pop().map(|x| x.1).ok_or_else(|| anyhow!("没有代号"))
+    }
+
     fn set_state(&self, state: &'static str, error: Option<String>) {
         let mut s = self.status.lock().unwrap();
         s.state = state;
@@ -285,7 +337,16 @@ async fn tick(app: &Shared) -> Result<()> {
         if let Err(e) = lookup_cycle(&a).await {
             tracing::warn!("查询失败：{e:#}");
         }
+        if let Err(e) = crate::session::ask_cycle(&a).await {
+            tracing::warn!("询问失败：{e:#}");
+        }
     });
+    let pools_due = now().saturating_sub(*net.last_pools.lock().unwrap()) >= 3600;
+    if pools_due {
+        *net.last_pools.lock().unwrap() = now();
+        let a = app.clone();
+        tokio::spawn(async move { crate::session::keep_pools(&a).await });
+    }
     Ok(())
 }
 
@@ -357,6 +418,7 @@ fn choose_entry(net: &Net, reg: &Registry, pin: &str) -> Option<NodeManifest> {
 }
 
 fn disconnect(app: &Shared) {
+    app.net.replies.lock().unwrap().clear();
     if app.net.entry.lock().unwrap().take().is_some() {
         tracing::info!("已断开入口节点");
     }
@@ -412,6 +474,12 @@ async fn connect(app: &Shared, m: &NodeManifest) -> Result<()> {
 async fn reader(app: Shared, mut rx: mpsc::Receiver<Event>, tx: mpsc::WeakSender<Envelope>) {
     while let Some(ev) = rx.recv().await {
         match ev {
+            Event::Env(env) if app.net.sessions.lock().unwrap().contains_key(&env.sid) => {
+                let ch = app.net.sessions.lock().unwrap().get(&env.sid).cloned();
+                if let Some(ch) = ch {
+                    let _ = ch.try_send(env);
+                }
+            }
             Event::Env(env) => match env.kind {
                 Kind::Probe => {
                     if let (Some(ack), Some(tx)) = (answer_probe(&app, &env), tx.upgrade()) {
@@ -420,10 +488,13 @@ async fn reader(app: Shared, mut rx: mpsc::Receiver<Event>, tx: mpsc::WeakSender
                     }
                 }
                 Kind::ProbeAck => on_ack(&app, &env),
-                // 会话消息在 M3 实现
-                Kind::Noise | Kind::Close => {}
+                // 未知会话的握手第 1 条：作为持有者接待
+                Kind::Noise => crate::session::on_handshake(&app, env),
+                Kind::Close => {}
             },
             Event::Nack { sid, code } => {
+                // 会话中的信封未送达：关闭该会话的通道，会话随即超时结束
+                app.net.sessions.lock().unwrap().remove(&sid);
                 if app.net.pending.lock().unwrap().remove(&sid).is_some() {
                     tracing::debug!("探测未送达：{code}");
                 }

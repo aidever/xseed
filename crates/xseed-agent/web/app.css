@@ -166,6 +166,7 @@ select.input{padding:0 10px}
 .track{display:flex;align-items:center}
 .track i{display:block;width:12px;height:2px;background:var(--line2)}
 .track b{flex:none;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--line2)}
+.track b.on{background:var(--acc);border-color:var(--acc)}
 
 /* 设置 */
 .give{position:relative;overflow:hidden}

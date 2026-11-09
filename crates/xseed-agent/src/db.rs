@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS peers (
 );
 -- 每个 SFP 最近一次查询
 CREATE TABLE IF NOT EXISTS lookups (sfp BLOB PRIMARY KEY, at INTEGER NOT NULL, hits INTEGER NOT NULL);
+-- 询问记录（M3）：同一内容同一站点问过后，一段时间内不再问
+CREATE TABLE IF NOT EXISTS asks (sfp BLOB NOT NULL, site_ref TEXT NOT NULL, at INTEGER NOT NULL, result TEXT NOT NULL, PRIMARY KEY (sfp, site_ref));
 CREATE TABLE IF NOT EXISTS challenge_pool (
   site_ref TEXT NOT NULL, torrent_id TEXT NOT NULL, ih BLOB NOT NULL,
   fetched_at INTEGER NOT NULL, uses INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (site_ref, torrent_id)

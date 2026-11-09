@@ -1937,6 +1937,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "149309498a5f7334b12ddae0cad8aba81ce785fe91755068867e017cf98fee46"
 
 [[package]]
+name = "snow"
+version = "0.9.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "850948bee068e713b8ab860fe1adc4d109676ab4c3b621fd8147f06b261f2f85"
+dependencies = [
+ "aes-gcm",
+ "blake2",
+ "chacha20poly1305",
+ "curve25519-dalek",
+ "rand_core 0.6.4",
+ "rustc_version",
+ "sha2 0.10.9",
+ "subtle",
+]
+
+[[package]]
 name = "socket2"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2740,6 +2756,7 @@ dependencies = [
  "tracing-subscriber",
  "url",
  "xseed-core",
+ "xseed-session",
  "xseed-transport",
  "zip",
 ]
@@ -2779,6 +2796,21 @@ dependencies = [
  "tracing-subscriber",
  "xseed-core",
  "xseed-transport",
+]
+
+[[package]]
+name = "xseed-session"
+version = "0.1.0"
+dependencies = [
+ "ciborium",
+ "hkdf",
+ "hmac",
+ "serde",
+ "serde_bytes",
+ "sha2 0.10.9",
+ "snow",
+ "subtle",
+ "thiserror",
 ]
 
 [[package]]

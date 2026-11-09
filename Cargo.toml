@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/xseed-core", "crates/xseed-transport", "crates/xseed-node", "crates/xseed-agent"]
+members = ["crates/xseed-core", "crates/xseed-transport", "crates/xseed-session", "crates/xseed-node", "crates/xseed-agent"]
 
 [workspace.package]
 version = "0.1.0"

@@ -204,7 +204,7 @@ async function pageOverview() {
   const scanning = st.scan && st.scan.running;
   const net = st.network || {};
   const live = netOn(net);
-  const pipeNote = net.state === 'online' ? `今天探测 ${fmtN(net.probes_today)} 次；社区里找到 ${fmtN(net.peers)} 个同款持有者。会员答题与自动加种将在后续版本开放`
+  const pipeNote = net.state === 'online' ? `今天探测 ${fmtN(net.probes_today)} 次；社区里找到 ${fmtN(net.peers)} 个同款持有者，答对会员题 ${fmtN(net.answers_today)} 次。自动加种将在下个版本开放`
     : net.state === 'connecting' ? '正在连接辅种网络…'
     : net.state === 'error' ? `辅种网络暂时连不上：${net.error || ''}`
     : net.state === 'no_registry' ? '还没有配置社区节点，可在“设置”中填写节点清单' : '完成设置后开始连接辅种网络';
@@ -229,7 +229,7 @@ async function pageOverview() {
     </section>
     <section class="card" aria-labelledby="pipe-h">
       <div class="card-head"><h2 id="pipe-h">一个辅种是怎么来的</h2><span class="small faint">${pipeNote}</span></div>
-      <ol class="pipe">${steps.map(([no, t, d], i) => { const v = i === 0 && live ? net.discovered : null; return `<li><span class="mono tiny faint">${no}</span><div class="row" style="justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:500">${t}</span><span class="mono" style="font-size:22px;color:var(${v ? '--ink' : '--ink3'})">${v === null ? '—' : fmtN(v)}</span></div><div class="bar">${v ? `<i style="width:${Math.max(4, Math.min(100, Math.round(v / Math.max(s.ok, 1) * 100)))}%"></i>` : ''}</div><span class="tiny faint">${d}</span></li>`; }).join('')}</ol>
+      <ol class="pipe">${steps.map(([no, t, d], i) => { const v = live ? (i === 0 ? net.discovered : i === 1 ? net.offers : null) : null; return `<li><span class="mono tiny faint">${no}</span><div class="row" style="justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:500">${t}</span><span class="mono" style="font-size:22px;color:var(${v ? '--ink' : '--ink3'})">${v === null ? '—' : fmtN(v)}</span></div><div class="bar">${v ? `<i style="width:${Math.max(4, Math.min(100, Math.round(v / Math.max(s.ok, 1) * 100)))}%"></i>` : ''}</div><span class="tiny faint">${d}</span></li>`; }).join('')}</ol>
     </section>
     ${alerts}
     <div class="cols">
@@ -322,10 +322,22 @@ async function pageSites() {
 }
 
 /* ───────── 辅种记录 ───────── */
+// 五步进度轨：前 step 步完成
+function track(step) {
+  return `<span class="track" aria-label="第 ${step} / 5 步">${[1, 2, 3, 4, 5].map((i) => `<b class="${i <= step ? 'on' : ''}"></b>`).join('<i></i>')}</span>`;
+}
+function jobRow(x) {
+  return `<li class="row" style="padding:14px 0;gap:8px 18px;flex-wrap:wrap">
+    <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:2px"><b class="trunc" style="font-weight:600">${esc(x.name || '（未命名）')}</b>
+      <span class="small faint mono trunc">${esc(x.site)} · #${esc(x.torrent_id)} · ${fmtSize(x.size)} · ${fmtAgo(x.at)}</span></div>
+    ${track(x.step)}
+    <span class="small muted" style="flex:0 1 220px">已拿到种子编号，等待加种（下个版本开放）</span></li>`;
+}
 async function pageJobs() {
   const [j, st] = await Promise.all([api('GET', '/jobs'), api('GET', '/status')]);
   let tab = 'all';
   const draw = () => {
+    const list = j.jobs.filter((x) => tab === 'all' || (tab === 'running' && x.status === 'new'));
     const tabs = [['all', '全部', j.counts.all], ['seeding', '做种中', j.counts.seeding], ['running', '进行中', j.counts.running], ['failed', '失败', j.counts.failed]];
     root.innerHTML = shell('#/jobs', `
       <div class="head"><div><h1 class="h1">辅种记录</h1><p class="muted">每一条都能看到走到了哪一步；卡住的会写明原因和下一步。</p></div></div>
@@ -333,9 +345,9 @@ async function pageJobs() {
         <div class="seg" role="group" aria-label="按状态筛选">${tabs.map(([k, t, n]) => `<button type="button" aria-pressed="${k === tab}" data-act="tab" data-arg="${k}">${t}<span class="n">${n}</span></button>`).join('')}</div>
         <div aria-hidden="true" class="row tiny faint" style="gap:14px"><span>发现</span>›<span>答题</span>›<span>下载</span>›<span>校验</span>›<span>做种</span></div>
       </div>
-      <section class="card" aria-label="记录列表"><div class="empty">
+      <section class="card" aria-label="记录列表">${list.length ? `<ul class="divide" style="list-style:none;margin:0;padding:0">${list.map(jobRow).join('')}</ul>` : `<div class="empty">
         <div class="track" aria-hidden="true" style="justify-content:center;margin-bottom:14px"><b></b><i></i><b></b><i></i><b></b><i></i><b></b><i></i><b></b></div>
-        还没有辅种记录。<br>辅种网络开放后，xseed 加入下载器的每个种子都会出现在这里。</div></section>
+        ${tab === 'all' ? '还没有辅种记录。<br>社区里有人答对会员题、告知你种子编号后，会出现在这里。' : '这一类还没有记录。'}</div>`}</section>
       <section class="dashed row" aria-labelledby="danger-h" style="justify-content:space-between">
         <div class="grow"><h2 id="danger-h" style="font-size:15px;font-weight:600">想全部撤回？</h2><p class="muted">从下载器移除 xseed 加入的全部种子。文件不会被删除，原来的种子不受影响。</p></div>
         <button class="btn danger" data-act="removeAll">全部移除…</button>

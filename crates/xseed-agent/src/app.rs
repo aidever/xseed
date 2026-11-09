@@ -26,6 +26,7 @@ pub struct App {
     /// 最近一次连接下载器的结果：（描述或错误, 是否成功）
     pub downloader_status: Mutex<Option<(String, bool)>>,
     pub net: crate::network::Net,
+    pub fetch: crate::fetch::Fetcher,
 }
 
 pub type Shared = Arc<App>;
@@ -56,6 +57,7 @@ impl App {
             ptd_last: Mutex::new(ptd_last),
             downloader_status: Mutex::new(None),
             net: Default::default(),
+            fetch: Default::default(),
         }))
     }
 
