@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>xseed 站点</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+[data-theme]{--bg:#F4F4F0;--panel:#FFFFFF;--panel2:#ECECE7;--line:#E2E2DC;--line2:#CFCFC8;--ink:#0E0F11;--ink2:#4C5058;--ink3:#666A72;--dot:rgba(14,15,17,0.07);--ok:#127347;--warn:#8F5300;--warn-bg:#FBEFD9;--err:#B0261C;--err-bg:#FBE5E2;--info:#2153B3;--heat0:#E4E4DE;--acc-text:#4A6600;color-scheme:light}
+[data-theme=dark]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--warn-bg:#2B200F;--err:#FF8076;--err-bg:#311513;--info:#8DB4FF;--heat0:#1B1D21;--acc-text:initial;color-scheme:dark}
+@media (prefers-color-scheme: dark){[data-theme=auto]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--warn-bg:#2B200F;--err:#FF8076;--err-bg:#311513;--info:#8DB4FF;--heat0:#1B1D21;--acc-text:initial;color-scheme:dark}}
+@keyframes xs-flow{to{background-position:14px 0}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+a{color:var(--ink)}a:hover{color:var(--ink2)}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="min-height: 100vh; background-color: var(--bg); background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 22px 22px; color: var(--ink); font-family: Inter, 'Noto Sans SC', system-ui, sans-serif; font-size: 14px; line-height: 1.55; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="flex: 1 1 220px; box-sizing: border-box; padding: 24px 16px; border-right: 1px solid var(--line); background: var(--bg); display: flex; flex-direction: column; gap: 28px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px; text-decoration: none">
+<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="10" cy="13" r="7" fill="none" stroke="{{accent}}" stroke-width="2.4"></circle><circle cx="16" cy="13" r="7" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2.4"></circle></svg>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 17px; letter-spacing: -0.02em">xseed</span>
+</a>
+<nav aria-label="主导航" style="display: flex; flex-wrap: wrap; gap: 2px">
+<a href="Main.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">概览</a>
+<a href="Sites.dc.html" aria-current="page" style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border-radius: 8px; text-decoration: none; background: var(--panel2); font-weight: 600"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 2px; background: {{accent}}"></span>站点</a>
+<a href="Jobs.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">辅种记录</a>
+<a href="Settings.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">设置</a>
+<a href="Privacy.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">隐私说明</a>
+</nav>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 12.5px; color: var(--ink3)">
+<div style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: var(--ok)"></span><span style="color: var(--ink2)">qBittorrent 5.0.2</span></div>
+<div style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: var(--ok)"></span><span style="color: var(--ink2)">节点 hk-1</span><span style="margin-left: auto; font-family: 'JetBrains Mono', ui-monospace, monospace">38 ms</span></div>
+</div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px 32px 64px">
+<div style="max-width: 1040px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 20px; margin-bottom: 4px">
+<div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 360px">
+<h1 style="margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15">6 个站点，<span style="color: var(--acc-text, {{accent}})">{{onCount}}</span> 个在辅种</h1>
+<p style="margin: 0; color: var(--ink2)">从你的做种列表里自动认出来的。打开开关，它就加入星轨。</p>
+</div>
+<button type="button" style="display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line2); background: var(--panel); color: var(--ink); font: inherit; font-weight: 500; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.6-4.4L4 8M4 4v4h4M4 13a8 8 0 0 0 14.6 4.4L20 16M20 20v-4h-4"></path></svg>重新识别</button>
+</div>
+
+<section aria-label="站点列表" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px">
+<sc-for list="{{sites}}" as="s" hint-placeholder-count="6">
+<article style="{{s.card}}">
+<div style="display: flex; align-items: center; gap: 12px">
+<span aria-hidden="true" style="{{s.ball}}">{{s.id}}</span>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column">
+<h2 style="margin: 0; font-size: 15px; font-weight: 600">站点 {{s.id}}</h2>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--ink3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{s.host}}</span>
+</div>
+<button type="button" role="switch" aria-checked="{{s.on}}" aria-label="站点 {{s.id}} 参与辅种" disabled="{{s.locked}}" onClick="{{s.toggle}}" style="{{s.track}}"><span style="{{s.knob}}"></span></button>
+</div>
+<div style="display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column"><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1">{{s.count}}</span><span style="font-size: 12px; color: var(--ink3)">本机种子</span></div>
+<div style="display: flex; flex-direction: column"><span style="{{s.addedStyle}}">{{s.added}}</span><span style="font-size: 12px; color: var(--ink3)">由 xseed 辅入</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px">
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: var(--ink3)">登录</span><span style="{{s.credStyle}}">{{s.cred}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: var(--ink3)">站长态度</span><span style="{{s.policyStyle}}">{{s.policy}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: var(--ink3)">今日额度</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--ink2)">{{s.quota}}</span></div>
+</div>
+</article>
+</sc-for>
+</section>
+
+<section aria-labelledby="ptd-h" style="background: var(--panel); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-wrap: wrap">
+<div style="flex: 1 1 340px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; border-right: 1px solid var(--line)">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="ptd-h" style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.02em">让 PT-depiler 替你管 Cookie</h2>
+<p style="margin: 0; color: var(--ink2)">它每次自动备份，各站登录信息就顺手同步到这里。站点登录失效？在浏览器里重新登录一次就好。</p>
+</div>
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 0; padding: 6px 0">
+<span style="flex: none; height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line2); display: inline-flex; align-items: center; font-size: 13px; font-weight: 500">PT-depiler</span>
+<span style="flex: 1 1 auto; height: 2px; background-image: repeating-linear-gradient(90deg, {{accent}} 0 6px, transparent 6px 14px); animation: xs-flow 0.9s linear infinite"></span>
+<span style="flex: none; height: 34px; padding: 0 12px; border-radius: 8px; background: {{accent}}; color: #0A0B0D; display: inline-flex; align-items: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600">xseed</span>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink2)"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: var(--ok)"></span>3 小时前同步了 14 个站点</span>
+<ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; color: var(--ink2); font-size: 13px">
+<li>PT-depiler：设置 → 备份 → 添加 WebDAV</li>
+<li>填入右边的地址、用户名、密码</li>
+<li>备份内容勾选“Cookie”和“元数据”，间隔 6 小时</li>
+</ol>
+</div>
+<div style="flex: 1 1 340px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; background: var(--panel2)">
+<sc-for list="{{creds}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: var(--ink3)">{{c.k}}</span>
+<div style="display: flex; align-items: center; gap: 4px; height: 42px; padding: 0 4px 0 14px; border-radius: 10px; background: var(--panel); border: 1px solid var(--line)">
+<code style="flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px">{{c.v}}</code>
+<button type="button" aria-label="{{c.label}}" style="flex: none; width: 36px; height: 36px; border: 0; border-radius: 8px; background: transparent; color: var(--ink2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></button>
+</div>
+</div>
+</sc-for>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<label for="ptd-key" style="font-size: 12px; color: var(--ink3)">加密密钥（推荐，与 PT-depiler 里一致）</label>
+<input id="ptd-key" type="password" value="pt-depiler-key" style="height: 42px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line2); background: var(--panel); color: var(--ink); font: inherit; box-sizing: border-box">
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F169","options":["#C8F169","#7DE3F4","#FFB35C","#B8A3FF"]},"theme":{"editor":"enum","options":["dark","light","auto"],"default":"dark"},"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { off: { U: true } };
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#C8F169';
+    const theme = this.props.theme ?? 'dark';
+    const mono = "font-family: 'JetBrains Mono', ui-monospace, monospace; ";
+    const rows = [
+      ['Y', 'tracker.site-y.example', '1,412', '+132', 'ok', 'PT-depiler', 'ok', '允许', '7 / 50', false],
+      ['Z', 'tracker.site-z.example', '846', '+71', 'ok', 'tracker 地址', 'mute', '未表态', '4 / 50', false],
+      ['V', 'pt.site-v.example', '322', '+48', 'ok', 'PT-depiler', 'ok', '允许 · 需校验', '1 / 20', false],
+      ['W', 'tracker.site-w.example', '201', '+35', 'err', '已失效', 'mute', '未表态', '已暂停', false],
+      ['U', 'u.example', '96', '—', 'warn', '需要 Cookie', 'mute', '未表态', '—', false],
+      ['T', 't.example', '37', '—', 'ok', 'tracker 地址', 'err', '不允许', '—', true]
+    ];
+    const COL = { ok: 'var(--ok)', mute: 'var(--ink2)', warn: 'var(--warn)', err: 'var(--err)' };
+    const off = this.state.off;
+    let onCount = 0;
+    const sites = rows.map(([id, host, count, added, ck, cred, pk, policy, quota, locked]) => {
+      const on = !locked && !off[id];
+      if (on) onCount++;
+      const bad = ck === 'err';
+      return {
+        id, host, count, added, cred, policy, quota, locked, on,
+        toggle: () => this.setState({ off: { ...this.state.off, [id]: !this.state.off[id] } }),
+        card: 'background: var(--panel); border: 1px solid ' + (bad ? 'var(--err)' : 'var(--line)') + '; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 18px' + (on ? '' : '; opacity: 0.62'),
+        ball: 'flex: none; width: 42px; height: 42px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; ' + mono + 'font-size: 15px; font-weight: 600; box-sizing: border-box; ' +
+          (on && !bad ? 'background: ' + accent + '; color: #0A0B0D; box-shadow: 0 0 18px ' + accent : bad ? 'border: 1.5px solid var(--err); color: var(--err)' : 'border: 1px dashed var(--line2); color: var(--ink3)'),
+        track: 'flex: none; position: relative; width: 44px; height: 26px; border-radius: 999px; border: 0; padding: 0; cursor: ' + (locked ? 'not-allowed' : 'pointer') + '; background: ' + (on ? accent : 'var(--line2)'),
+        knob: 'position: absolute; top: 3px; left: ' + (on ? '21px' : '3px') + '; width: 20px; height: 20px; border-radius: 50%; background: ' + (on ? '#0A0B0D' : 'var(--panel)') + '; transition: left 0.15s',
+        addedStyle: mono + 'font-size: 26px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; color: ' + (added === '—' ? 'var(--ink3)' : 'var(--acc-text, ' + accent + ')'),
+        credStyle: 'font-weight: 500; color: ' + COL[ck],
+        policyStyle: 'font-weight: 500; color: ' + COL[pk]
+      };
+    });
+    const creds = [
+      { k: '地址', v: 'http://192.168.1.10:7731/ptd/', label: '复制地址' },
+      { k: '用户名', v: 'ptd', label: '复制用户名' },
+      { k: '密码', v: 'k7Qx••••••••Zp2', label: '复制密码' }
+    ];
+    return { accent, theme, sites, onCount, creds };
+  }
+}
+</script>
+</body>
+</html>

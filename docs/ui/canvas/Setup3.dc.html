@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>设置向导：试运行</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+[data-theme]{--bg:#F4F4F0;--panel:#FFFFFF;--panel2:#ECECE7;--line:#E2E2DC;--line2:#CFCFC8;--ink:#0E0F11;--ink2:#4C5058;--ink3:#666A72;--dot:rgba(14,15,17,0.07);--ok:#127347;--warn:#8F5300;--err:#B0261C;--info:#2153B3;--heat0:#E4E4DE;--stage:#0E0F11;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:#4A6600;color-scheme:light}
+[data-theme=dark]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--err:#FF8076;--info:#8DB4FF;--heat0:#1B1D21;--stage:#111215;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:initial;color-scheme:dark}
+@media (prefers-color-scheme: dark){[data-theme=auto]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--err:#FF8076;--info:#8DB4FF;--heat0:#1B1D21;--stage:#111215;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:initial;color-scheme:dark}}
+@keyframes xs-flow{to{background-position:14px 0}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+a{color:var(--ink)}a:hover{color:var(--ink2)}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="min-height: 100vh; background: var(--bg); color: var(--ink); font-family: Inter, 'Noto Sans SC', system-ui, sans-serif; font-size: 14px; line-height: 1.55; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="--acc-text: initial; flex: 1 1 380px; box-sizing: border-box; padding: 32px; background-color: var(--stage); background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.2px); background-size: 22px 22px; color: var(--stage-ink); display: flex; flex-direction: column; gap: 28px; border-right: 1px solid var(--line)">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="10" cy="13" r="7" fill="none" stroke="{{accent}}" stroke-width="2.4"></circle><circle cx="16" cy="13" r="7" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2.4"></circle></svg>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 17px">xseed</span>
+</div>
+<div role="img" aria-label="预计辅种：站点 Y 71 个，站点 Z 44 个，站点 V 21 个，站点 W 12 个" style="position: relative; width: 300px; height: 300px; align-self: center; flex: none">
+<div aria-hidden="true" style="position: absolute; left: 20px; top: 20px; width: 260px; height: 260px; border-radius: 50%; border: 1px dashed var(--stage-line); box-sizing: border-box"></div>
+<div aria-hidden="true" style="position: absolute; left: 80px; top: 80px; width: 140px; height: 140px; border-radius: 50%; border: 1px solid var(--stage-line); box-sizing: border-box"></div>
+<sc-for list="{{beams}}" as="b" hint-placeholder-count="4"><div aria-hidden="true" style="{{b}}"></div></sc-for>
+<div aria-hidden="true" style="position: absolute; left: 106px; top: 106px; width: 88px; height: 88px; border-radius: 50%; background: {{accent}}; color: #0A0B0D; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, monospace; box-shadow: 0 0 0 7px var(--stage), 0 0 40px {{accent}}">
+<span style="font-size: 22px; font-weight: 600; line-height: 1">148</span>
+<span style="font-size: 11px; opacity: 0.75">可辅种</span>
+</div>
+<sc-for list="{{planets}}" as="p" hint-placeholder-count="6">
+<div aria-hidden="true" style="{{p.pos}}"><span style="{{p.ball}}">{{p.id}}</span><span style="{{p.tag}}">{{p.label}}</span></div>
+</sc-for>
+</div>
+<ol aria-label="设置进度" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px">
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">✓</span>欢迎</li>
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">✓</span>连接下载器</li>
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">✓</span>确认站点</li>
+<li aria-current="step" style="display: flex; align-items: center; gap: 12px; height: 36px; font-weight: 600"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--acc-text, {{accent}})">04</span>试运行</li>
+</ol>
+</aside>
+
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 56px 48px 48px; display: flex; flex-direction: column">
+<div style="max-width: 600px; width: 100%; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; color: var(--ink3)">04 / 04 · 试运行，什么都还没加</span>
+<h1 style="margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.12">你的硬盘里，藏着 <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; color: var(--acc-text, {{accent}})">2.1 TB</span> 还能多做种的内容。</h1>
+</div>
+
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden">
+<div style="background: var(--panel); padding: 16px 18px; display: flex; flex-direction: column-reverse; gap: 2px"><dt style="font-size: 12px; color: var(--ink3)">可辅种</dt><dd style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 500; letter-spacing: -0.03em">148</dd></div>
+<div style="background: var(--panel); padding: 16px 18px; display: flex; flex-direction: column-reverse; gap: 2px"><dt style="font-size: 12px; color: var(--ink3)">分布在</dt><dd style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 500; letter-spacing: -0.03em">4 站</dd></div>
+<div style="background: var(--panel); padding: 16px 18px; display: flex; flex-direction: column-reverse; gap: 2px"><dt style="font-size: 12px; color: var(--ink3)">额外占用</dt><dd style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 500; letter-spacing: -0.03em">0 B</dd></div>
+</dl>
+
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px">
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--ink3)">01</span><span>新种子直接指向你已有的文件——<b style="font-weight: 600">不复制、不移动、不删除</b></span></li>
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--ink3)">02</span><span>每站每天最多加 50 个，预计 <b style="font-weight: 600">3 天</b>内全部完成，启动时间随机错开</span></li>
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--ink3)">03</span><span>都带 <code style="font-family: 'JetBrains Mono', ui-monospace, monospace; padding: 1px 6px; border-radius: 4px; background: var(--panel2)">xseed</code> 标签，随时可以在“辅种记录”里一键撤回</span></li>
+</ul>
+
+<a href="#" style="align-self: flex-start; font-size: 13px; color: var(--ink2)">先看看完整的 148 条 →</a>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 8px">
+<a href="Setup2.dc.html" style="display: inline-flex; align-items: center; height: 46px; padding: 0 8px; color: var(--ink2); text-decoration: none; font-weight: 500">← 上一步</a>
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 12px; height: 56px; padding: 0 28px; border-radius: 12px; background: {{accent}}; color: #0A0B0D; text-decoration: none; font-size: 16px; font-weight: 800; box-shadow: 0 8px 32px -8px {{accent}}">点亮星轨，开始辅种 <span aria-hidden="true">→</span></a>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F169","options":["#C8F169","#7DE3F4","#FFB35C","#B8A3FF"]},"theme":{"editor":"enum","options":["dark","light","auto"],"default":"dark"},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#C8F169';
+    const theme = this.props.theme ?? 'dark';
+    const C = 150, R = 130;
+    const rows = [['Y', -62, 71, '+71'], ['Z', 4, 44, '+44'], ['V', 70, 21, '+21'], ['W', 140, 12, '+12'], ['U', 205, 0, '未开'], ['T', 262, 0, '不允许']];
+    const beams = [];
+    const planets = rows.map(([id, deg, n, label]) => {
+      const a = deg * Math.PI / 180;
+      const x = C + R * Math.cos(a), y = C + R * Math.sin(a);
+      const on = n > 0;
+      if (on) beams.push('position: absolute; left: ' + C + 'px; top: ' + (C - 1) + 'px; width: ' + (R - 20) + 'px; height: ' + (n > 40 ? 3 : 2) + 'px; transform-origin: 0 50%; transform: rotate(' + deg + 'deg); background-image: repeating-linear-gradient(90deg, ' + accent + ' 0 6px, transparent 6px 14px); animation: xs-flow ' + (0.6 + 40 / (n + 10)).toFixed(2) + 's linear infinite');
+      return {
+        id, label,
+        pos: 'position: absolute; left: ' + (x - 36).toFixed(1) + 'px; top: ' + (y - 20).toFixed(1) + 'px; width: 72px; display: flex; flex-direction: column; align-items: center; gap: 3px',
+        ball: 'width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: \'JetBrains Mono\', ui-monospace, monospace; font-size: 14px; font-weight: 600; box-sizing: border-box; ' +
+          (on ? 'background: var(--stage-ink); color: #0A0B0D; box-shadow: 0 0 0 6px var(--stage)' : 'border: 1px dashed var(--stage-line); color: var(--stage-ink2); background: var(--stage)'),
+        tag: 'font-family: \'JetBrains Mono\', ui-monospace, monospace; font-size: 11.5px; font-weight: 600; padding: 0 6px; border-radius: 999px; background: var(--stage); color: ' + (on ? accent : 'var(--stage-ink2)')
+      };
+    });
+    return { accent, theme, beams, planets };
+  }
+}
+</script>
+</body>
+</html>

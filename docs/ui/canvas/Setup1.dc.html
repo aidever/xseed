@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>设置向导：连接下载器</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+[data-theme]{--bg:#F4F4F0;--panel:#FFFFFF;--panel2:#ECECE7;--line:#E2E2DC;--line2:#CFCFC8;--ink:#0E0F11;--ink2:#4C5058;--ink3:#666A72;--dot:rgba(14,15,17,0.07);--ok:#127347;--warn:#8F5300;--err:#B0261C;--info:#2153B3;--stage:#0E0F11;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:#4A6600;color-scheme:light}
+[data-theme=dark]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--err:#FF8076;--info:#8DB4FF;--stage:#111215;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:initial;color-scheme:dark}
+@media (prefers-color-scheme: dark){[data-theme=auto]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--err:#FF8076;--info:#8DB4FF;--stage:#111215;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:initial;color-scheme:dark}}
+@keyframes xs-flow{to{background-position:14px 0}}
+@keyframes xs-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+a{color:var(--ink)}a:hover{color:var(--ink2)}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="min-height: 100vh; background: var(--bg); color: var(--ink); font-family: Inter, 'Noto Sans SC', system-ui, sans-serif; font-size: 14px; line-height: 1.55; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="--acc-text: initial; flex: 1 1 380px; box-sizing: border-box; padding: 32px; background-color: var(--stage); background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.2px); background-size: 22px 22px; color: var(--stage-ink); display: flex; flex-direction: column; gap: 28px; border-right: 1px solid var(--line)">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="10" cy="13" r="7" fill="none" stroke="{{accent}}" stroke-width="2.4"></circle><circle cx="16" cy="13" r="7" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2.4"></circle></svg>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 17px">xseed</span>
+</div>
+<div role="img" aria-label="正在把你的下载器接入 xseed，站点还没有识别" style="position: relative; width: 300px; height: 300px; align-self: center; flex: none">
+<div aria-hidden="true" style="position: absolute; left: 20px; top: 20px; width: 260px; height: 260px; border-radius: 50%; border: 1px dashed var(--stage-line); box-sizing: border-box; animation: xs-spin 40s linear infinite"></div>
+<div aria-hidden="true" style="position: absolute; left: 80px; top: 80px; width: 140px; height: 140px; border-radius: 50%; border: 1px solid var(--stage-line); box-sizing: border-box"></div>
+<div aria-hidden="true" style="position: absolute; left: 106px; top: 106px; width: 88px; height: 88px; border-radius: 50%; background: var(--stage-ink); color: #0A0B0D; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, monospace">
+<span style="font-size: 12.5px; font-weight: 600">你的 NAS</span>
+<span style="font-size: 11px; opacity: 0.7">3,214 种</span>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 149px; top: 194px; width: 2px; height: 46px; background-image: repeating-linear-gradient(180deg, {{accent}} 0 6px, transparent 6px 12px)"></div>
+<div aria-hidden="true" style="position: absolute; left: 116px; top: 240px; width: 68px; height: 30px; border-radius: 8px; background: {{accent}}; color: #0A0B0D; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; font-weight: 600">{{kindShort}}</div>
+<span aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 2px; text-align: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11.5px; color: var(--stage-ink2)">站点稍后出现在这条轨道上</span>
+</div>
+<ol aria-label="设置进度" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px">
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">✓</span>欢迎</li>
+<li aria-current="step" style="display: flex; align-items: center; gap: 12px; height: 36px; font-weight: 600"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--acc-text, {{accent}})">02</span>连接下载器</li>
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">03</span>确认站点</li>
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">04</span>试运行</li>
+</ol>
+</aside>
+
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 56px 48px 48px; display: flex; flex-direction: column">
+<div style="max-width: 560px; width: 100%; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; color: var(--ink3)">02 / 04</span>
+<h1 style="margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.12">先把下载器接进来。</h1>
+<p style="margin: 0; color: var(--ink2)">小助手只用下载器的网页接口，不需要挂载你的数据目录。</p>
+</div>
+
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line2); color: var(--ink2)"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{accent}}; flex: none"></span><span>在 <b style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 500; color: var(--ink)">192.168.1.10:8080</b> 找到了 qBittorrent，地址已经帮你填好。</span></p>
+
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 13px; font-weight: 500">下载器</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px">
+<sc-for list="{{kinds}}" as="k" hint-placeholder-count="2">
+<label style="{{k.style}}">
+<input type="radio" name="kind" checked="{{k.on}}" onChange="{{k.pick}}" style="position: absolute; opacity: 0; width: 1px; height: 1px">
+<span style="{{k.logo}}">{{k.short}}</span>
+<span style="display: flex; flex-direction: column"><b style="font-weight: 600">{{k.name}}</b><span style="font-size: 12.5px; color: var(--ink3)">{{k.ver}}</span></span>
+</label>
+</sc-for>
+</div>
+</fieldset>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="url" style="font-size: 13px; font-weight: 500">网页界面地址</label>
+<input id="url" type="url" value="http://192.168.1.10:8080" style="height: 46px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line2); background: var(--panel); color: var(--ink); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; box-sizing: border-box">
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="user" style="font-size: 13px; font-weight: 500">用户名</label><input id="user" type="text" value="admin" style="height: 46px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line2); background: var(--panel); color: var(--ink); font: inherit; box-sizing: border-box"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="pass" style="font-size: 13px; font-weight: 500">密码</label><input id="pass" type="password" value="password" style="height: 46px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line2); background: var(--panel); color: var(--ink); font: inherit; box-sizing: border-box"></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 14px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line)">
+<span aria-hidden="true" style="flex: none; width: 28px; height: 28px; border-radius: 50%; background: {{accent}}; color: #0A0B0D; display: inline-flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></span>
+<div style="flex: 1 1 220px; display: flex; flex-direction: column"><b style="font-weight: 600">已连上 qBittorrent 5.0.2</b><span style="font-size: 13px; color: var(--ink2)">发现 <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--ink)">3,214</span> 个正在做种的种子</span></div>
+<button type="button" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line2); background: transparent; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer">重新测试</button>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 8px">
+<a href="#" style="display: inline-flex; align-items: center; height: 46px; padding: 0 8px; color: var(--ink2); text-decoration: none; font-weight: 500">← 上一步</a>
+<a href="Setup2.dc.html" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 10px; background: {{accent}}; color: #0A0B0D; text-decoration: none; font-weight: 700">下一步：确认站点 <span aria-hidden="true">→</span></a>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F169","options":["#C8F169","#7DE3F4","#FFB35C","#B8A3FF"]},"theme":{"editor":"enum","options":["dark","light","auto"],"default":"dark"},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { kind: 'qb' };
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#C8F169';
+    const theme = this.props.theme ?? 'dark';
+    const kinds = [['qb', 'qB', 'qBittorrent', '4.x / 5.x'], ['tr', 'Tr', 'Transmission', '3.x / 4.x']].map(([id, short, name, ver]) => {
+      const on = this.state.kind === id;
+      return {
+        short, name, ver, on, pick: () => this.setState({ kind: id }),
+        logo: 'flex: none; width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-family: \'JetBrains Mono\', ui-monospace, monospace; font-weight: 600; font-size: 13px; ' + (on ? 'background: ' + accent + '; color: #0A0B0D' : 'background: var(--panel2); color: var(--ink2)'),
+        style: 'position: relative; display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 12px; cursor: pointer; background: var(--panel); border: 1.5px solid ' + (on ? accent : 'var(--line)')
+      };
+    });
+    return { accent, theme, kinds, kindShort: this.state.kind === 'qb' ? 'qB' : 'Tr' };
+  }
+}
+</script>
+</body>
+</html>

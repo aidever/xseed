@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>设置向导：确认站点</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+[data-theme]{--bg:#F4F4F0;--panel:#FFFFFF;--panel2:#ECECE7;--line:#E2E2DC;--line2:#CFCFC8;--ink:#0E0F11;--ink2:#4C5058;--ink3:#666A72;--dot:rgba(14,15,17,0.07);--ok:#127347;--warn:#8F5300;--err:#B0261C;--info:#2153B3;--stage:#0E0F11;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:#4A6600;color-scheme:light}
+[data-theme=dark]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--err:#FF8076;--info:#8DB4FF;--stage:#111215;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:initial;color-scheme:dark}
+@media (prefers-color-scheme: dark){[data-theme=auto]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--err:#FF8076;--info:#8DB4FF;--stage:#111215;--stage-ink:#EEEFF1;--stage-ink2:#A9ADB6;--stage-line:#2E3137;--acc-text:initial;color-scheme:dark}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+a{color:var(--ink)}a:hover{color:var(--ink2)}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="min-height: 100vh; background: var(--bg); color: var(--ink); font-family: Inter, 'Noto Sans SC', system-ui, sans-serif; font-size: 14px; line-height: 1.55; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="--acc-text: initial; flex: 1 1 380px; box-sizing: border-box; padding: 32px; background-color: var(--stage); background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.2px); background-size: 22px 22px; color: var(--stage-ink); display: flex; flex-direction: column; gap: 28px; border-right: 1px solid var(--line)">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="10" cy="13" r="7" fill="none" stroke="{{accent}}" stroke-width="2.4"></circle><circle cx="16" cy="13" r="7" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2.4"></circle></svg>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 17px">xseed</span>
+</div>
+<div role="img" aria-label="{{orbitLabel}}" style="position: relative; width: 300px; height: 300px; align-self: center; flex: none">
+<div aria-hidden="true" style="position: absolute; left: 20px; top: 20px; width: 260px; height: 260px; border-radius: 50%; border: 1px dashed var(--stage-line); box-sizing: border-box"></div>
+<div aria-hidden="true" style="position: absolute; left: 80px; top: 80px; width: 140px; height: 140px; border-radius: 50%; border: 1px solid var(--stage-line); box-sizing: border-box"></div>
+<sc-for list="{{beams}}" as="b" hint-placeholder-count="4"><div aria-hidden="true" style="{{b}}"></div></sc-for>
+<div aria-hidden="true" style="position: absolute; left: 106px; top: 106px; width: 88px; height: 88px; border-radius: 50%; background: var(--stage-ink); color: #0A0B0D; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, monospace; box-shadow: 0 0 0 7px var(--stage)">
+<span style="font-size: 12.5px; font-weight: 600">你的 NAS</span>
+<span style="font-size: 11px; opacity: 0.7">3,214 种</span>
+</div>
+<sc-for list="{{planets}}" as="p" hint-placeholder-count="6"><span aria-hidden="true" style="{{p.style}}">{{p.id}}</span></sc-for>
+</div>
+<ol aria-label="设置进度" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px">
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">✓</span>欢迎</li>
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">✓</span>连接下载器</li>
+<li aria-current="step" style="display: flex; align-items: center; gap: 12px; height: 36px; font-weight: 600"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--acc-text, {{accent}})">03</span>确认站点</li>
+<li style="display: flex; align-items: center; gap: 12px; height: 36px; color: var(--stage-ink2)"><span aria-hidden="true" style="width: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px">04</span>试运行</li>
+</ol>
+</aside>
+
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 56px 48px 48px; display: flex; flex-direction: column">
+<div style="max-width: 600px; width: 100%; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; color: var(--ink3)">03 / 04</span>
+<h1 style="margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.12">挑出要加入星轨的站点。</h1>
+<p style="margin: 0; color: var(--ink2)">从你的做种列表里认出了 6 个站。大部分的登录信息已经从 tracker 地址里自动取得。</p>
+</div>
+
+<section aria-label="站点" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px">
+<sc-for list="{{sites}}" as="s" hint-placeholder-count="6">
+<label style="{{s.card}}">
+<input type="checkbox" checked="{{s.on}}" disabled="{{s.locked}}" onChange="{{s.toggle}}" style="flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--acc-text, {{accent}})">
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="display: flex; justify-content: space-between; gap: 8px"><b style="font-weight: 600">站点 {{s.id}}</b><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; color: var(--ink3)">{{s.count}}</span></span>
+<span style="{{s.noteStyle}}">{{s.note}}</span>
+</span>
+</label>
+</sc-for>
+</section>
+
+<details style="border: 1px dashed var(--line2); border-radius: 12px; padding: 4px 16px">
+<summary style="cursor: pointer; display: flex; align-items: center; gap: 10px; min-height: 48px; list-style: none; font-weight: 500">
+<span aria-hidden="true" style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--acc-text, {{accent}})">+</span>用 PT-depiler？一键同步所有站点的 Cookie<span style="margin-left: auto; font-size: 12.5px; color: var(--ink3); font-weight: 400">可选</span>
+</summary>
+<div style="display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 12px; padding: 4px 0 16px; font-size: 13px">
+<span style="color: var(--ink3)">地址</span><code style="font-family: 'JetBrains Mono', ui-monospace, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">http://192.168.1.10:7731/ptd/</code>
+<span style="color: var(--ink3)">用户名</span><code style="font-family: 'JetBrains Mono', ui-monospace, monospace">ptd</code>
+<span style="color: var(--ink3)">密码</span><code style="font-family: 'JetBrains Mono', ui-monospace, monospace">k7Qx••••••••Zp2</code>
+</div>
+</details>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 8px">
+<a href="Setup1.dc.html" style="display: inline-flex; align-items: center; height: 46px; padding: 0 8px; color: var(--ink2); text-decoration: none; font-weight: 500">← 上一步</a>
+<div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+<span style="font-size: 13px; color: var(--ink2)">已选 <b style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--ink)">{{picked}}</b> 个站</span>
+<a href="Setup3.dc.html" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 10px; background: {{accent}}; color: #0A0B0D; text-decoration: none; font-weight: 700">下一步：试运行 <span aria-hidden="true">→</span></a>
+</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F169","options":["#C8F169","#7DE3F4","#FFB35C","#B8A3FF"]},"theme":{"editor":"enum","options":["dark","light","auto"],"default":"dark"},"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { off: { U: true } };
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#C8F169';
+    const theme = this.props.theme ?? 'dark';
+    const rows = [
+      ['Y', '1,412', '可直接用', 'ok', false, -62],
+      ['Z', '846', '可直接用 · 站点未表态', 'ok', false, 4],
+      ['V', '322', '可直接用 · 加种后会校验', 'ok', false, 70],
+      ['W', '201', '可直接用 · 站点未表态', 'ok', false, 140],
+      ['U', '96', '需要 Cookie，可用下方 PT-depiler 同步', 'warn', false, 205],
+      ['T', '37', '站长不允许，不会参与', 'err', true, 262]
+    ];
+    const off = this.state.off;
+    const C = 150, R = 130;
+    let picked = 0;
+    const beams = [], planets = [], names = [];
+    const sites = rows.map(([id, count, note, k, locked, deg]) => {
+      const on = !locked && !off[id];
+      if (on) { picked++; names.push('站点 ' + id); }
+      const a = deg * Math.PI / 180;
+      const x = C + R * Math.cos(a), y = C + R * Math.sin(a);
+      if (on) beams.push('position: absolute; left: ' + C + 'px; top: ' + (C - 1) + 'px; width: ' + (R - 20) + 'px; height: 2px; transform-origin: 0 50%; transform: rotate(' + deg + 'deg); background: ' + accent + '; opacity: 0.55');
+      planets.push({ id, style: 'position: absolute; left: ' + (x - 20).toFixed(1) + 'px; top: ' + (y - 20).toFixed(1) + 'px; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: \'JetBrains Mono\', ui-monospace, monospace; font-size: 14px; font-weight: 600; box-sizing: border-box; transition: all 0.25s; ' +
+        (on ? 'background: ' + accent + '; color: #0A0B0D; box-shadow: 0 0 0 6px var(--stage), 0 0 22px ' + accent : locked ? 'border: 1px dashed var(--err); color: var(--err); background: var(--stage)' : 'border: 1px dashed var(--stage-line); color: var(--stage-ink2); background: var(--stage)') });
+      return {
+        id, count, note, locked, on,
+        toggle: () => this.setState({ off: { ...this.state.off, [id]: !this.state.off[id] } }),
+        noteStyle: 'font-size: 12.5px; color: ' + (k === 'ok' ? 'var(--ink3)' : k === 'warn' ? 'var(--warn)' : 'var(--err)'),
+        card: 'display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; background: var(--panel); cursor: ' + (locked ? 'not-allowed' : 'pointer') + '; border: 1.5px solid ' + (on ? accent : 'var(--line)') + (locked ? '; opacity: 0.6' : '')
+      };
+    });
+    return { accent, theme, sites, picked, beams, planets, orbitLabel: '星轨上已接入：' + (names.join('、') || '暂无站点') };
+  }
+}
+</script>
+</body>
+</html>

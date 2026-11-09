@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>xseed 隐私说明</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+[data-theme]{--bg:#F4F4F0;--panel:#FFFFFF;--panel2:#ECECE7;--line:#E2E2DC;--line2:#CFCFC8;--ink:#0E0F11;--ink2:#4C5058;--ink3:#666A72;--dot:rgba(14,15,17,0.07);--ok:#127347;--warn:#8F5300;--warn-bg:#FBEFD9;--err:#B0261C;--err-bg:#FBE5E2;--info:#2153B3;--heat0:#E4E4DE;--redact:#0E0F11;--acc-text:#4A6600;color-scheme:light}
+[data-theme=dark]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--warn-bg:#2B200F;--err:#FF8076;--err-bg:#311513;--info:#8DB4FF;--heat0:#1B1D21;--redact:#2A2C31;--acc-text:initial;color-scheme:dark}
+@media (prefers-color-scheme: dark){[data-theme=auto]{--bg:#08090B;--panel:#111215;--panel2:#1A1B1F;--line:#212328;--line2:#2E3137;--ink:#EEEFF1;--ink2:#A9ADB6;--ink3:#868B95;--dot:rgba(255,255,255,0.05);--ok:#62D49B;--warn:#F2B657;--warn-bg:#2B200F;--err:#FF8076;--err-bg:#311513;--info:#8DB4FF;--heat0:#1B1D21;--redact:#2A2C31;--acc-text:initial;color-scheme:dark}}
+a{color:var(--ink)}a:hover{color:var(--ink2)}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="min-height: 100vh; background-color: var(--bg); background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 22px 22px; color: var(--ink); font-family: Inter, 'Noto Sans SC', system-ui, sans-serif; font-size: 14px; line-height: 1.55; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="flex: 1 1 220px; box-sizing: border-box; padding: 24px 16px; border-right: 1px solid var(--line); background: var(--bg); display: flex; flex-direction: column; gap: 28px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px; text-decoration: none">
+<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="10" cy="13" r="7" fill="none" stroke="{{accent}}" stroke-width="2.4"></circle><circle cx="16" cy="13" r="7" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2.4"></circle></svg>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 17px; letter-spacing: -0.02em">xseed</span>
+</a>
+<nav aria-label="主导航" style="display: flex; flex-wrap: wrap; gap: 2px">
+<a href="Main.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">概览</a>
+<a href="Sites.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">站点</a>
+<a href="Jobs.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">辅种记录</a>
+<a href="Settings.dc.html" style="flex: 1 1 180px; display: flex; align-items: center; height: 40px; padding: 0 10px 0 26px; border-radius: 8px; text-decoration: none; color: var(--ink2)">设置</a>
+<a href="Privacy.dc.html" aria-current="page" style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border-radius: 8px; text-decoration: none; background: var(--panel2); font-weight: 600"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 2px; background: {{accent}}"></span>隐私说明</a>
+</nav>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 12.5px; color: var(--ink3)">
+<div style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: var(--ok)"></span><span style="color: var(--ink2)">qBittorrent 5.0.2</span></div>
+<div style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: var(--ok)"></span><span style="color: var(--ink2)">节点 hk-1</span><span style="margin-left: auto; font-family: 'JetBrains Mono', ui-monospace, monospace">38 ms</span></div>
+</div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px 32px 64px">
+<div style="max-width: 1040px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px">
+<h1 style="margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1">换个身份，<br>看看别人能看到你什么。</h1>
+<p style="margin: 0; color: var(--ink2)">选一方，下面这份“档案”就只露出它能看到的部分，其余的全部涂黑。</p>
+</div>
+
+<section aria-label="各方能看到什么" style="background: var(--panel); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-wrap: wrap">
+<div role="radiogroup" aria-label="选择视角" style="flex: 1 1 260px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; border-right: 1px solid var(--line); background: var(--panel2)">
+<span style="font-size: 12px; color: var(--ink3); padding: 0 8px 4px">我是…</span>
+<sc-for list="{{views}}" as="v" hint-placeholder-count="4">
+<button type="button" role="radio" aria-checked="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">
+<span style="font-weight: 600">{{v.name}}</span>
+<span style="font-size: 12.5px; color: var(--ink3); font-weight: 400">{{v.sub}}</span>
+</button>
+</sc-for>
+</div>
+<div style="flex: 2 1 420px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px">
+<h2 style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; color: var(--ink3); letter-spacing: 0.04em">关于你的档案 · {{viewName}}视角</h2>
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px"><span style="color: var(--acc-text, {{accent}})">{{seen}}</span> / 7 项可见</span>
+</div>
+<dl style="margin: 0; display: flex; flex-direction: column">
+<sc-for list="{{fields}}" as="f" hint-placeholder-count="7">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 12px 0; border-top: 1px solid var(--line)">
+<dt style="flex: 0 0 120px; font-size: 13px; color: var(--ink2)">{{f.k}}</dt>
+<dd style="flex: 1 1 200px; margin: 0; min-width: 0; display: flex; align-items: center; gap: 10px">
+<sc-if value="{{f.show}}" hint-placeholder-val="{{ true }}"><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13.5px">{{f.v}}</span></sc-if>
+<sc-if value="{{f.hide}}" hint-placeholder-val="{{ false }}"><span aria-label="看不到" style="{{f.bar}}"></span></sc-if>
+</dd>
+<span style="{{f.tagStyle}}">{{f.tag}}</span>
+</div>
+</sc-for>
+</dl>
+<p style="margin: 14px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--panel2); font-size: 13px; color: var(--ink2)">{{viewNote}}</p>
+</div>
+</section>
+
+<section aria-labelledby="how-h" style="background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px">
+<h2 id="how-h" style="margin: 0; font-size: 14px; font-weight: 600">一次辅种是怎么发生的</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li style="display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 2px solid {{accent}}">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--ink3)">{{s.n}}</span>
+<b style="font-size: 15px; font-weight: 650">{{s.title}}</b>
+<span style="color: var(--ink2); font-size: 13px">{{s.body}}</span>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<section aria-labelledby="never-h" style="border: 1px dashed var(--line2); border-radius: 18px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="never-h" style="margin: 0; font-size: 14px; font-weight: 600">xseed 承诺不做的事</h2>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px 28px">
+<sc-for list="{{promises}}" as="t" hint-placeholder-count="4">
+<li style="display: flex; gap: 10px; align-items: baseline"><span aria-hidden="true" style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--acc-text, {{accent}})">✕</span><span>{{t}}</span></li>
+</sc-for>
+</ul>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F169","options":["#C8F169","#7DE3F4","#FFB35C","#B8A3FF"]},"theme":{"editor":"enum","options":["dark","light","auto"],"default":"dark"},"$preview":{"width":1280,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'peer' };
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#C8F169';
+    const theme = this.props.theme ?? 'dark';
+    const V = [
+      ['entry', '入口节点', '帮你转发消息的社区节点', '它只负责转发。消息是加密的，它连你在问哪个站都不知道。'],
+      ['index', '登记节点', '保存文件指纹的社区节点', '它只看到一串指纹，而且不知道是谁登记的——IP 和指纹分在两个节点上。'],
+      ['peer', '其他用户', '手里有同样文件的人', '只有答对了该站的会员题，他才知道“某个匿名用户在这个站有这个种子”。'],
+      ['site', 'PT 站点', '和你平时使用一样', '站点看到的和你平时手动下载种子、开始做种完全一样，不会多出任何信息。']
+    ];
+    // field, value, who can see
+    const F = [
+      ['你的 IP', '203.0.113.24', ['entry', 'site']],
+      ['文件指纹', '9f3a·e1b7·…·c71e', ['index', 'peer']],
+      ['站点名', '站点 Y', ['peer', 'site']],
+      ['种子编号', '#48211', ['peer', 'site']],
+      ['你的站点账号', 'seeder_42', ['site']],
+      ['你还在哪些站', '站点 Z、V、W', []],
+      ['Cookie / passkey', 'c0ffee…', []]
+    ];
+    const view = this.state.view;
+    const cur = V.find((x) => x[0] === view);
+    let seen = 0;
+    const fields = F.map(([k, v, who], i) => {
+      const show = who.indexOf(view) >= 0;
+      if (show) seen++;
+      const w = 90 + ((i * 37) % 80);
+      return {
+        k, v, show, hide: !show,
+        bar: 'display: inline-block; width: ' + w + 'px; height: 16px; border-radius: 3px; background: var(--redact)',
+        tag: show ? '能看到' : '看不到',
+        tagStyle: 'flex: none; font-size: 12px; font-weight: 500; color: ' + (show ? 'var(--warn)' : 'var(--ok)')
+      };
+    });
+    const views = V.map(([id, name, sub]) => {
+      const on = id === view;
+      return {
+        name, sub, on, pick: () => this.setState({ view: id }),
+        style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 1px; text-align: left; padding: 12px 14px; border-radius: 10px; cursor: pointer; font: inherit; color: var(--ink); background: ' + (on ? 'var(--panel)' : 'transparent') + '; border: 1px solid ' + (on ? accent : 'transparent')
+      };
+    });
+    return {
+      accent, theme, views, fields, seen,
+      viewName: cur[1], viewNote: cur[3],
+      steps: [
+        { n: '01', title: '登记指纹', body: '小助手给每个种子算一个文件指纹交给社区节点。指纹只由文件名和大小算出，看不出内容。' },
+        { n: '02', title: '加密询问', body: '别人也有同样文件时，经节点发来一条加密消息：“你在 Y 站有这个吗？”' },
+        { n: '03', title: '会员答题', body: '你的小助手出一道只有 Y 站会员才答得上的题，答对了才告诉他种子编号。' },
+        { n: '04', title: '自己下载', body: '他用自己的账号去 Y 站下载种子、加进下载器做种。你找辅种也一样。' }
+      ],
+      promises: [
+        '不删除、不移动你的任何文件，不改动原有的种子',
+        '不把 Cookie、passkey 发给任何人，只加密保存在本机',
+        '不在站长明确不允许的站点上运行',
+        '不读取硬盘上的文件内容（除非你手动开启抽查）'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
