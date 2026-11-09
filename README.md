@@ -8,7 +8,46 @@
 - **不动你的文件**：新种子直接指向已有文件，跳过校验；不复制、不移动、不删除。
 - **小白可用**：只需填写下载器，站点自动识别；可从 PT-depiler 经 WebDAV 同步各站 Cookie。
 
-> 当前处于设计阶段，尚未有可运行的代码。
+> **当前进度：M1「本机可用」**——能连接下载器、识别站点、从 PT-depiler 同步凭证，并在 Web UI 中看到自己的库。辅种网络（登记、询问、答题、自动加种）在 M2–M4 中开放，见[开发计划](docs/04-开发计划.md)。
+
+![概览](docs/ui/m1/overview.png)
+
+## 运行
+
+### Docker
+
+```sh
+docker run -d --name xseed --network host \
+  -v /path/to/xseed:/data \
+  ghcr.io/aidever/xseed:main
+```
+
+然后在浏览器打开 `http://<NAS 地址>:7731`，按向导设置管理员密码、填写下载器地址。
+
+- 推荐 `--network host`：这样小助手可以用 `http://localhost:8080` 访问同一台机器上的下载器。用桥接网络时，请在向导中填写下载器的局域网地址，并加 `-p 7731:7731`。
+- 小助手**不需要**映射你的数据目录，只通过下载器的网页接口工作。
+
+### 从源码
+
+```sh
+cargo build --release
+XSEED_DATA=./data ./target/release/xseed-agent
+```
+
+| 环境变量 | 默认值 | 说明 |
+|---|---|---|
+| `XSEED_DATA` | `data` | 数据目录：配置 `xseed-agent.toml`、数据库、加密密钥 `vault.key` |
+| `XSEED_LISTEN` | `0.0.0.0:7731` | Web UI 监听地址（覆盖配置文件） |
+
+忘记管理员密码：在小助手所在设备上运行 `xseed-agent reset-password`（Docker 中为 `docker exec xseed xseed-agent reset-password`），然后重新打开页面设置新密码。
+
+## 代码结构
+
+| 目录 | 说明 |
+|---|---|
+| `crates/xseed-core` | 与网络无关的算法：bencode、种子解析与文件列表规范化、文件指纹、桶、HRW、工作量证明、站点识别 |
+| `crates/xseed-agent` | 小助手：下载器适配（qBittorrent / Transmission）、清单扫描、凭证加密、PT-depiler WebDAV 接收端、Web API |
+| `crates/xseed-agent/web` | Web UI（原生 JS，无构建步骤，编译时嵌入二进制） |
 
 ## 文档
 
@@ -19,6 +58,7 @@
 | [详细设计说明书](docs/03-详细设计说明书.md) | 算法、协议、数据结构、配置、界面、安全、性能、错误码 |
 | [落地设计（决策记录）](docs/00-落地设计.md) | 讨论阶段的决策记录，与 02/03 冲突时以 02/03 为准 |
 | [页面设计稿 v3「星轨」](docs/ui/README.md) | 小助手 Web UI 设计规范与画布源文件 |
+| [开发计划](docs/04-开发计划.md) | 里程碑与进度 |
 
 ## 反馈
 

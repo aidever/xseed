@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = ["crates/xseed-core", "crates/xseed-agent"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "UNLICENSED"
+repository = "https://github.com/aidever/xseed"
+
+[profile.release]
+lto = "thin"
+strip = true
+codegen-units = 4
