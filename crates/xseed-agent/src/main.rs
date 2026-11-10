@@ -7,6 +7,7 @@ mod db;
 mod downloader;
 mod fetch;
 mod inventory;
+mod jobs;
 mod network;
 mod ptd;
 mod session;
@@ -58,6 +59,7 @@ async fn main() -> anyhow::Result<()> {
     let addr: SocketAddr = listen.parse()?;
     tokio::spawn(app::background(app.clone()));
     tokio::spawn(network::run(app.clone()));
+    tokio::spawn(jobs::run(app.clone()));
     let listener = tokio::net::TcpListener::bind(addr).await?;
     tracing::info!("xseed-agent {} 已启动：http://{addr}  数据目录 {}", env!("CARGO_PKG_VERSION"), dir.display());
     axum::serve(listener, web::router(app).into_make_service_with_connect_info::<SocketAddr>())

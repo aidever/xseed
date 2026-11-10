@@ -38,7 +38,6 @@ pub struct Fetcher {
 pub enum Purpose {
     Pool,
     Challenge,
-    #[allow(dead_code)] // M4 加种时使用
     Target,
 }
 

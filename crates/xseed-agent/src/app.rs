@@ -27,6 +27,8 @@ pub struct App {
     pub downloader_status: Mutex<Option<(String, bool)>>,
     pub net: crate::network::Net,
     pub fetch: crate::fetch::Fetcher,
+    /// 有新的告知或用户操作时唤醒加种循环
+    pub jobs_kick: tokio::sync::Notify,
 }
 
 pub type Shared = Arc<App>;
@@ -58,6 +60,7 @@ impl App {
             downloader_status: Mutex::new(None),
             net: Default::default(),
             fetch: Default::default(),
+            jobs_kick: Default::default(),
         }))
     }
 
@@ -72,6 +75,7 @@ impl App {
         drop(c);
         // 配置变化（完成设置、节点清单、入口节点）立即生效
         self.net.kick.notify_one();
+        self.jobs_kick.notify_one();
         Ok(())
     }
 

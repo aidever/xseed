@@ -66,6 +66,7 @@ pub fn router(app: Shared) -> Router {
         .route("/dry-run", get(dry_run))
         .route("/dry-run/confirm", post(dry_run_confirm))
         .route("/jobs", get(jobs))
+        .route("/jobs/{id}/retry", post(retry_job))
         .route("/remove-all", post(remove_all))
         .route("/config", get(get_config).put(put_config))
         .route("/audit", get(audit))
@@ -336,11 +337,39 @@ async fn status(State(app): State<Shared>) -> Res {
         "network": network_json(&app),
         "dry_run": cfg.dry_run,
         "respond": cfg.respond,
-        "today": {"added": 0, "size": 0},
+        "added": added_stats(&app),
+        "recent": job_rows(&app, 5),
         "sites": sites,
         "alerts": alerts,
         "ptd": app.ptd_last.lock().unwrap().clone(),
     }))
+}
+
+/// 加种统计：今天（总数、大小、各站）、累计、最近 12 周每天的数量。
+fn added_stats(app: &Shared) -> Value {
+    let today = now() - now().rem_euclid(86_400);
+    let since = today - 83 * 86_400;
+    let c = app.db.lock();
+    let rows: Vec<(i64, String, i64)> = c
+        .prepare("SELECT a.added_at, o.site_ref, o.size FROM added_torrents a JOIN jobs j ON j.id=a.job_id JOIN offers o ON o.id=j.offer_id")
+        .and_then(|mut st| st.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?))).map(|x| x.filter_map(Result::ok).collect()))
+        .unwrap_or_default();
+    let mut by_site = serde_json::Map::new();
+    let (mut n, mut size, mut total_size) = (0i64, 0i64, 0i64);
+    let mut heat = vec![0i64; 84];
+    for (at, site, sz) in &rows {
+        total_size += sz;
+        if *at >= today {
+            n += 1;
+            size += sz;
+            let e = by_site.entry(site.clone()).or_insert(json!(0));
+            *e = json!(e.as_i64().unwrap_or(0) + 1);
+        }
+        if *at >= since {
+            heat[((at - since) / 86_400).clamp(0, 83) as usize] += 1;
+        }
+    }
+    json!({"today": {"added": n, "size": size, "by_site": by_site}, "total": {"added": rows.len(), "size": total_size}, "heat": heat})
 }
 
 fn network_json(app: &Shared) -> Value {
@@ -350,11 +379,33 @@ fn network_json(app: &Shared) -> Value {
     v["discovered"] = json!(discovered);
     v["peers"] = json!(peers);
     v["offers"] = json!(app.db.lock().query_row("SELECT COUNT(*) FROM offers", [], |r| r.get::<_, i64>(0)).unwrap_or(0));
+    let (fetched, verified, seeding) = crate::jobs::funnel(&app.db);
+    v["fetched"] = json!(fetched);
+    v["verified"] = json!(verified);
+    v["seeding"] = json!(seeding);
     v
 }
 
 async fn list_sites(State(app): State<Shared>) -> Res {
-    ok(json!({"sites": sites::list(&app.db, &app.vault)}))
+    // 各站由 xseed 辅入、仍在下载器中的种子数，以及今天加入的数量（按日期重算，不依赖额度计数器是否已跨天）
+    let today = now() - now().rem_euclid(86_400);
+    let counts: std::collections::HashMap<String, (i64, i64)> = app
+        .db
+        .lock()
+        .prepare("SELECT o.site_ref, SUM(a.removed_at IS NULL), SUM(a.added_at >= ?1) FROM added_torrents a JOIN jobs j ON j.id=a.job_id JOIN offers o ON o.id=j.offer_id GROUP BY o.site_ref")
+        .and_then(|mut st| st.query_map([today], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?)))).map(|x| x.filter_map(Result::ok).collect()))
+        .unwrap_or_default();
+    let list: Vec<Value> = sites::list(&app.db, &app.vault)
+        .into_iter()
+        .map(|s| {
+            let (active, today) = counts.get(&s.site_ref).copied().unwrap_or((0, 0));
+            let mut v = serde_json::to_value(&s).unwrap_or_default();
+            v["xseed_added"] = json!(active);
+            v["added_today"] = json!(today);
+            v
+        })
+        .collect();
+    ok(json!({"sites": list}))
 }
 
 #[derive(Deserialize)]
@@ -523,7 +574,8 @@ async fn webdav(State(app): State<Shared>, ConnectInfo(addr): ConnectInfo<Socket
 async fn dry_run(State(app): State<Shared>) -> Res {
     let stats = inventory::stats(&app.db);
     let sites = sites::list(&app.db, &app.vault);
-    ok(json!({"stats": stats, "sites": sites, "network": network_json(&app), "candidates": null}))
+    let candidates: i64 = app.db.lock().query_row("SELECT COUNT(*) FROM offers WHERE status IN ('new','used')", [], |r| r.get(0)).unwrap_or(0);
+    ok(json!({"stats": stats, "sites": sites, "network": network_json(&app), "candidates": candidates}))
 }
 
 async fn dry_run_confirm(State(app): State<Shared>) -> Res {
@@ -535,47 +587,64 @@ async fn dry_run_confirm(State(app): State<Shared>) -> Res {
     ok(json!({"ok": true}))
 }
 
-/// 辅种记录。M3 只有“已拿到种子编号”的告知；加种（M4）后补充后续步骤。
-async fn jobs(State(app): State<Shared>) -> Res {
+/// 辅种记录：每个任务走到了哪一步（03 §5.2）。
+fn job_rows(app: &Shared, limit: i64) -> Vec<Value> {
     let names: std::collections::HashMap<String, String> = sites::list(&app.db, &app.vault).into_iter().map(|s| (s.site_ref, s.name)).collect();
     let c = app.db.lock();
-    let mut st = c
-        .prepare(
-            "SELECT o.id, o.site_ref, o.torrent_id, o.size, o.received_at, o.status,
-                    (SELECT name FROM local_torrents lt WHERE lt.sfp=o.sfp ORDER BY lt.first_seen LIMIT 1)
-             FROM offers o ORDER BY o.received_at DESC LIMIT 500",
-        )
-        .map_err(anyhow::Error::from)?;
-    let rows: Vec<Value> = st
-        .query_map([], |r| {
-            let site_ref: String = r.get(1)?;
-            Ok(json!({
-                "id": r.get::<_, i64>(0)?,
-                "site_ref": site_ref,
-                "torrent_id": r.get::<_, String>(2)?,
-                "size": r.get::<_, i64>(3)?,
-                "at": r.get::<_, i64>(4)?,
-                "status": r.get::<_, String>(5)?,
-                "name": r.get::<_, Option<String>>(6)?.unwrap_or_default(),
-                "step": 2,
-            }))
-        })
-        .map_err(anyhow::Error::from)?
-        .filter_map(Result::ok)
-        .map(|mut v| {
-            let n = names.get(v["site_ref"].as_str().unwrap_or_default()).cloned();
-            v["site"] = json!(n.unwrap_or_else(|| v["site_ref"].as_str().unwrap_or_default().split_once(':').map(|x| x.1.to_string()).unwrap_or_default()));
-            v
-        })
-        .collect();
-    let n = rows.len();
-    ok(json!({"jobs": rows, "counts": {"all": n, "seeding": 0, "running": n, "failed": 0}}))
+    let Ok(mut st) = c.prepare(
+        "SELECT j.id, o.site_ref, o.torrent_id, o.size, j.created_at, j.updated_at, j.state, j.reason, j.new_hash IS NOT NULL, j.not_before,
+                (SELECT name FROM local_torrents lt WHERE lt.downloader=j.local_downloader AND lt.hash=j.local_hash)
+         FROM jobs j JOIN offers o ON o.id=j.offer_id ORDER BY j.updated_at DESC, j.id DESC LIMIT ?1",
+    ) else {
+        return vec![];
+    };
+    st.query_map([limit], |r| {
+        let site_ref: String = r.get(1)?;
+        let state: String = r.get(6)?;
+        let reason: Option<String> = r.get(7)?;
+        let added: bool = r.get(8)?;
+        let site = names.get(&site_ref).cloned().unwrap_or_else(|| site_ref.split_once(':').map(|x| x.1.to_string()).unwrap_or_default());
+        Ok(json!({
+            "id": r.get::<_, i64>(0)?,
+            "site_ref": site_ref,
+            "site": site,
+            "torrent_id": r.get::<_, String>(2)?,
+            "size": r.get::<_, i64>(3)?,
+            "at": r.get::<_, i64>(4)?,
+            "updated_at": r.get::<_, i64>(5)?,
+            "step": crate::jobs::step(&state, reason.as_deref(), added),
+            "state": state,
+            "reason": reason,
+            "not_before": r.get::<_, i64>(9)?,
+            "name": r.get::<_, Option<String>>(10)?.unwrap_or_default(),
+        }))
+    })
+    .map(|rows| rows.filter_map(Result::ok).collect())
+    .unwrap_or_default()
+}
+
+async fn jobs(State(app): State<Shared>) -> Res {
+    let rows = job_rows(&app, 500);
+    let count = |f: &dyn Fn(&str) -> bool| rows.iter().filter(|v| f(v["state"].as_str().unwrap_or_default())).count();
+    let counts = json!({
+        "all": rows.len(),
+        "seeding": count(&|s| s == "seeding"),
+        "running": count(&|s| matches!(s, "pending" | "fetching" | "verifying" | "adding" | "observing")),
+        "failed": count(&|s| s == "failed"),
+    });
+    ok(json!({"jobs": rows, "counts": counts}))
+}
+
+async fn retry_job(State(app): State<Shared>, Path(id): Path<i64>) -> Res {
+    if !crate::jobs::retry(&app, id)? {
+        return Err(ApiError(StatusCode::CONFLICT, "只有失败的记录可以重试".into()));
+    }
+    ok(json!({"ok": true}))
 }
 
 async fn remove_all(State(app): State<Shared>) -> Res {
-    let n: i64 = app.db.lock().query_row("SELECT COUNT(*) FROM added_torrents WHERE removed_at IS NULL", [], |r| r.get(0)).unwrap_or(0);
-    app.db.audit("remove_all", &n.to_string());
-    ok(json!({"removed": 0, "pending": n}))
+    let (removed, skipped) = crate::jobs::remove_all(&app).await.map_err(|e| ApiError(StatusCode::BAD_GATEWAY, format!("连不上下载器：{e}")))?;
+    ok(json!({"removed": removed, "skipped": skipped}))
 }
 
 async fn get_config(State(app): State<Shared>) -> Res {

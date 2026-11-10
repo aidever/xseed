@@ -83,11 +83,13 @@ pub struct NetTuning {
     pub session_gap_max_secs: u64,
     /// 同一内容在同一站点询问无果后，多久再问（秒）。
     pub ask_retry_secs: u64,
+    /// 拿到种子编号后，随机延后多久再加种（秒，0 到该值之间；03 §4.1 start_delay）。
+    pub add_delay_max_secs: u64,
 }
 
 impl Default for NetTuning {
     fn default() -> Self {
-        NetTuning { register_spread_secs: 86_400, first_register_spread_secs: 600, lookup_every_secs: 86_400, probes_per_content: 8, probe_gap_ms: 1_500, site_rate_per_min: 2, session_gap_min_secs: 60, session_gap_max_secs: 1_800, ask_retry_secs: 7 * 86_400 }
+        NetTuning { register_spread_secs: 86_400, first_register_spread_secs: 600, lookup_every_secs: 86_400, probes_per_content: 8, probe_gap_ms: 1_500, site_rate_per_min: 2, session_gap_min_secs: 60, session_gap_max_secs: 1_800, ask_retry_secs: 7 * 86_400, add_delay_max_secs: 600 }
     }
 }
 

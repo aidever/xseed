@@ -1,5 +1,4 @@
 //! 下载器适配（03 §1.10）。只有“保留数据移除”，没有任何删除数据的接口。
-#![allow(dead_code)] // add / start / remove_keep_data 在 M4 自动加种中使用
 
 mod qb;
 mod tr;
@@ -40,6 +39,34 @@ pub struct AddRequest {
     pub rename_root: Option<(String, String)>,
     pub skip_check: bool,
     pub category: Option<String>,
+}
+
+/// 某个种子在下载器中的当前状态（加入前检查原种子、加入后观察新种子）。
+#[derive(Debug, Clone)]
+pub struct Status {
+    pub health: Health,
+    pub progress: f64,
+    pub save_path: String,
+    /// 内容所在位置：多文件种子为根目录的完整路径（qB `content_path`；TR `downloadDir/name`）。
+    pub content_path: String,
+    /// 带有 `xseed` 标签
+    pub tagged: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Health {
+    Ok,
+    Checking,
+    /// 文件缺失或下载器报错
+    Broken(String),
+}
+
+/// tracker 汇报结果。
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Announce {
+    Pending,
+    Working,
+    Failed(String),
 }
 
 /// 种子的元数据来源：原始种子或文件列表。
@@ -111,6 +138,32 @@ impl Client {
             Client::Qb(c) => c.start(hash).await,
             Client::Tr(c) => c.start(hash).await,
         }
+    }
+
+    pub async fn status(&self, hash: &str) -> Result<Option<Status>> {
+        match self {
+            Client::Qb(c) => c.status(hash).await,
+            Client::Tr(c) => c.status(hash).await,
+        }
+    }
+
+    pub async fn announce(&self, hash: &str) -> Result<Announce> {
+        match self {
+            Client::Qb(c) => c.announce(hash).await,
+            Client::Tr(c) => c.announce(hash).await,
+        }
+    }
+
+    /// 新种子在该下载器中的 hash 字符串。qB 对纯 v2 种子使用截短到 20 字节的 v2 hash。
+    pub fn hash_of(&self, ih1: Option<&[u8]>, ih2: Option<&[u8]>) -> Option<String> {
+        if let Some(h) = ih1 {
+            return Some(hex::encode(h));
+        }
+        let h = ih2?;
+        Some(match self {
+            Client::Qb(_) => hex::encode(&h[..20]),
+            Client::Tr(_) => hex::encode(h),
+        })
     }
 
     pub async fn remove_keep_data(&self, hash: &str) -> Result<()> {

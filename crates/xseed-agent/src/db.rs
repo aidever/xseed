@@ -58,7 +58,8 @@ CREATE TABLE IF NOT EXISTS jobs (
   id INTEGER PRIMARY KEY, offer_id INTEGER NOT NULL REFERENCES offers(id),
   local_downloader TEXT NOT NULL, local_hash TEXT NOT NULL,
   state TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, reason TEXT,
-  created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
+  created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL,
+  new_hash TEXT, not_before INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS jobs_state ON jobs(state);
 CREATE TABLE IF NOT EXISTS added_torrents (
@@ -91,11 +92,18 @@ CREATE TABLE IF NOT EXISTS secrets (name TEXT PRIMARY KEY, nonce BLOB NOT NULL, 
 CREATE TABLE IF NOT EXISTS audit_log (id INTEGER PRIMARY KEY, at INTEGER NOT NULL, kind TEXT NOT NULL, detail TEXT NOT NULL);
 "#;
 
+/// M3 及更早建出的库补列（列已存在时忽略错误）。
+fn migrate(c: &Connection) {
+    let _ = c.execute_batch("ALTER TABLE jobs ADD COLUMN new_hash TEXT");
+    let _ = c.execute_batch("ALTER TABLE jobs ADD COLUMN not_before INTEGER NOT NULL DEFAULT 0");
+}
+
 impl Db {
     pub fn open(path: &Path) -> Result<Self> {
         let c = Connection::open(path)?;
         c.execute_batch("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;")?;
         c.execute_batch(SCHEMA)?;
+        migrate(&c);
         Ok(Db(Arc::new(Mutex::new(c))))
     }
 

@@ -73,7 +73,7 @@ function orbit({ size = 340, planets = [], core = ['你的 NAS', ''], coreAcc = 
     const a = deg * Math.PI / 180;
     const x = C + R * Math.cos(a), y = C + R * Math.sin(a);
     if (p.state !== 'off') {
-      const cls = p.state === 'bad' ? 'bad' : beam;
+      const cls = p.state === 'bad' ? 'bad' : (p.beam || beam);
       const h = p.weight > 40 ? 3 : 2;
       beams += `<div class="beam ${cls}" style="left:${C}px;top:${C - 1}px;width:${R - 22}px;height:${h}px;transform:rotate(${deg}deg)"></div>`;
     }
@@ -108,9 +108,15 @@ function sitePlanets(sites, opts = {}) {
   return sites.slice(0, 8).map((s, i) => ({
     id: ids[i],
     label: opts.label ? opts.label(s) : fmtN(s.torrents),
-    state: s.status === 'denied' || !s.enabled ? 'off' : 'on',
+    state: s.status === 'denied' || !s.enabled ? 'off' : opts.bad && s.status === 'need_cookie' ? 'bad' : 'on',
+    beam: opts.beam ? opts.beam(s) : undefined,
     weight: s.torrents,
   }));
+}
+function siteBalls(sites) {
+  const ids = initials(sites), m = {};
+  sites.forEach((s, i) => { m[s.site_ref] = ids[i]; });
+  return m;
 }
 
 /* ───────── 外框 ───────── */
@@ -204,7 +210,11 @@ async function pageOverview() {
   const scanning = st.scan && st.scan.running;
   const net = st.network || {};
   const live = netOn(net);
-  const pipeNote = net.state === 'online' ? `今天探测 ${fmtN(net.probes_today)} 次；社区里找到 ${fmtN(net.peers)} 个同款持有者，答对会员题 ${fmtN(net.answers_today)} 次。自动加种将在下个版本开放`
+  const balls = siteBalls(sites);
+  const ad = st.added || { today: { added: 0, size: 0, by_site: {} }, total: { added: 0, size: 0 }, heat: [] };
+  const today = ad.today, byS = today.by_site || {};
+  const hasAdds = ad.total.added > 0;
+  const pipeNote = net.state === 'online' ? `今天探测 ${fmtN(net.probes_today)} 次；社区里找到 ${fmtN(net.peers)} 个同款持有者，答对会员题 ${fmtN(net.answers_today)} 次`
     : net.state === 'connecting' ? '正在连接辅种网络…'
     : net.state === 'error' ? `辅种网络暂时连不上：${net.error || ''}`
     : net.state === 'no_registry' ? '还没有配置社区节点，可在“设置”中填写节点清单' : '完成设置后开始连接辅种网络';
@@ -215,7 +225,15 @@ async function pageOverview() {
       <button class="btn sm" data-act="rescan" ${scanning ? 'disabled' : ''}>${I.refresh}重新扫描</button>
     </div>
     <section class="hero" aria-labelledby="hero-h">
-      <div class="hero-l">
+      <div class="hero-l">${hasAdds ? `
+        <h1 id="hero-h" style="font-size:15px;font-weight:500;color:var(--ink2)">${today.added ? `同一份文件，今天又在 <b style="color:var(--ink);font-weight:600">${fmtN(Object.keys(byS).length)} 个站</b> 多做了种` : '今天还没有新的辅种，小助手会继续寻找'}</h1>
+        <div class="row" style="align-items:flex-end;gap:14px"><span class="big acc-t">+${fmtN(today.added)}</span><span style="display:flex;flex-direction:column;padding-bottom:4px;font-size:13px" class="muted"><span>个种子</span><span class="mono" style="color:var(--ink)">${fmtSize(today.size)}</span></span></div>
+        <p class="muted" style="max-width:380px">新种子都直接指向你硬盘里已有的文件——<span style="color:var(--ink)">多做种，不多占一个字节。</span></p>
+        <dl class="kv3">
+          <div><dt>累计多做种</dt><dd>${fmtSize(ad.total.size)}</dd></div>
+          <div><dt>xseed 加入</dt><dd>${fmtN(ad.total.added)}</dd></div>
+          <div><dt>额外占用</dt><dd>0 B</dd></div>
+        </dl>` : `
         <h1 id="hero-h" style="font-size:15px;font-weight:500;color:var(--ink2)">你的 NAS 里，有 <b style="color:var(--ink);font-weight:600">${fmtN(s.sites)} 个站</b> 的种子</h1>
         <div class="row" style="align-items:flex-end;gap:14px"><span class="big${s.ok >= 10000 ? ' sm' : ''}">${fmtN(s.ok)}</span><span style="display:flex;flex-direction:column;padding-bottom:4px;font-size:13px" class="muted"><span>个种子</span><span class="mono" style="color:var(--ink)">${fmtSize(s.total_size)}</span></span></div>
         <p class="muted" style="max-width:400px">${live && net.discovered ? `其中 <b style="color:var(--ink)">${fmtN(net.discovered)}</b> 个已在社区里找到同款。` : ''}xseed 会帮这些文件在更多站点做种——<span style="color:var(--ink)">多做种，不多占一个字节。</span></p>
@@ -223,21 +241,21 @@ async function pageOverview() {
           <div><dt>可以回答别人</dt><dd>${fmtN(s.holders)}</dd></div>
           <div><dt>已在多站做种</dt><dd>${fmtN(s.multi_site)}</dd></div>
           <div><dt>参与的站点</dt><dd>${fmtN(onSites.length)}</dd></div>
-        </dl>
+        </dl>`}
       </div>
-      <div class="hero-r">${orbit({ planets: sitePlanets(sites), core: ['你的 NAS', fmtN(s.ok) + ' 种'], label: '星轨：' + sites.map((x) => x.name + (x.enabled ? '（参与）' : '（未开启）')).join('、') })}</div>
+      <div class="hero-r">${orbit({ planets: sitePlanets(sites, { bad: true, label: (x) => byS[x.site_ref] ? '+' + byS[x.site_ref] : x.status === 'need_cookie' ? '登录失效' : fmtN(x.torrents), beam: (x) => (byS[x.site_ref] ? 'live' : 'still') }), core: ['你的 NAS', fmtN(s.ok) + ' 种'], label: '星轨：' + sites.map((x) => x.name + (byS[x.site_ref] ? `（今天 +${byS[x.site_ref]}）` : x.enabled ? '（参与）' : '（未开启）')).join('、') })}</div>
     </section>
     <section class="card" aria-labelledby="pipe-h">
       <div class="card-head"><h2 id="pipe-h">一个辅种是怎么来的</h2><span class="small faint">${pipeNote}</span></div>
-      <ol class="pipe">${steps.map(([no, t, d], i) => { const v = live ? (i === 0 ? net.discovered : i === 1 ? net.offers : null) : null; return `<li><span class="mono tiny faint">${no}</span><div class="row" style="justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:500">${t}</span><span class="mono" style="font-size:22px;color:var(${v ? '--ink' : '--ink3'})">${v === null ? '—' : fmtN(v)}</span></div><div class="bar">${v ? `<i style="width:${Math.max(4, Math.min(100, Math.round(v / Math.max(s.ok, 1) * 100)))}%"></i>` : ''}</div><span class="tiny faint">${d}</span></li>`; }).join('')}</ol>
+      <ol class="pipe">${steps.map(([no, t, d], i) => { const v = live ? [net.discovered, net.offers, net.fetched, net.verified, net.seeding][i] ?? null : null; return `<li><span class="mono tiny faint">${no}</span><div class="row" style="justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:500">${t}</span><span class="mono" style="font-size:22px;color:var(${v ? '--ink' : '--ink3'})">${v === null ? '—' : fmtN(v)}</span></div><div class="bar">${v ? `<i style="width:${Math.max(4, Math.min(100, Math.round(v / Math.max(s.ok, 1) * 100)))}%"></i>` : ''}</div><span class="tiny faint">${d}</span></li>`; }).join('')}</ol>
     </section>
     ${alerts}
     <div class="cols">
       <section class="card" style="flex:7 1 420px;min-width:0" aria-labelledby="recent-h">
         <div class="card-head"><h2 id="recent-h">最近辅种</h2><a href="#/jobs" class="small muted">全部记录 →</a></div>
-        <p class="empty">还没有辅种记录。<br>辅种网络开放后，新加入的种子会出现在这里。</p>
+        ${(st.recent || []).length ? `<div class="feed">${st.recent.map((x) => feedRow(x, balls)).join('')}</div>` : '<p class="empty">还没有辅种记录。<br>社区里有人答对会员题、告知你种子编号后，新加入的种子会出现在这里。</p>'}
       </section>
-      <section class="card" style="flex:4 1 280px;min-width:0" aria-labelledby="lib-h">
+      ${hasAdds ? heatCard(ad.heat) : `<section class="card" style="flex:4 1 280px;min-width:0" aria-labelledby="lib-h">
         <div class="card-head"><h2 id="lib-h">本机清单</h2><span class="tiny faint">只读下载器，不读硬盘</span></div>
         <dl class="facts" style="border:0;padding:0">
           <div><dt>识别到站点</dt><dd class="mono">${fmtN(s.ok)}</dd></div>
@@ -245,7 +263,7 @@ async function pageOverview() {
           <div><dt>公共种子，不参与</dt><dd class="mono">${fmtN(s.unknown_site)}</dd></div>
           <div><dt>无法读取文件列表</dt><dd class="mono">${fmtN(s.invalid)}</dd></div>
         </dl>
-      </section>
+      </section>`}
     </div>`, { downloader: st.downloader, network: st.network });
   actions.rescan = async () => { await api('POST', '/scan'); toast('开始重新扫描'); setTimeout(route, 600); };
   if (scanning) timer = setInterval(() => { if ((location.hash || '#/') === '#/') pageOverview().catch(() => {}); }, 2500);
@@ -274,6 +292,7 @@ async function pageSites() {
       <div class="row" style="gap:18px;align-items:baseline">
         <div style="display:flex;flex-direction:column"><span class="num">${fmtN(s.torrents)}</span><span class="tiny faint">本机种子</span></div>
         <div style="display:flex;flex-direction:column"><span class="num acc-t">${fmtN(s.holders)}</span><span class="tiny faint">可以回答别人</span></div>
+        <div style="display:flex;flex-direction:column"><span class="num">${fmtN(s.xseed_added || 0)}</span><span class="tiny faint">由 xseed 辅入</span></div>
       </div>
       <dl class="facts">
         <div><dt>登录</dt><dd class="${cc}">${ct}</dd></div>
@@ -322,32 +341,107 @@ async function pageSites() {
 }
 
 /* ───────── 辅种记录 ───────── */
-// 五步进度轨：前 step 步完成
-function track(step) {
-  return `<span class="track" aria-label="第 ${step} / 5 步">${[1, 2, 3, 4, 5].map((i) => `<b class="${i <= step ? 'on' : ''}"></b>`).join('<i></i>')}</span>`;
+const STEPS = ['发现', '答题', '下载', '校验', '做种'];
+// 失败原因文案（03 §5.3）
+const REASON = {
+  daily_limit: (s) => `${s} 今天的加种额度用完了，明天继续。`,
+  site_rate_limited: (s) => `${s} 暂时限制了下载，今天会自动减速，明天继续。`,
+  site_unreachable: (s) => `${s} 暂时连不上，稍后自动重试。`,
+  downloader_unreachable: () => '连不上下载器，请检查下载器是否在运行、地址和密码是否正确。',
+  site_auth_failed: (s) => `${s} 下载种子失败：登录信息已失效。请在 PT-depiler 中重新登录该站，或在站点页更新 Cookie。`,
+  site_denied: (s) => `${s} 拒绝了下载：登录信息可能已失效，或账号没有下载权限。`,
+  passkey_invalid: (s) => `${s} 的 passkey 已失效。请到站点重置 passkey，并在下载器中更新任意一个该站种子的 tracker 地址。`,
+  no_source: (s) => `${s} 上找不到这个种子，可能已被删除。`,
+  ih_mismatch: () => '下载到的种子与对方告知的不一致，已放弃。',
+  sfp_mismatch: () => '下载到的种子文件列表与本机不一致，已放弃。',
+  foreign_tracker: (s) => `种子里的 tracker 不属于 ${s}，已放弃。`,
+  source_state_changed: () => '本机原种子有变化（被移动、删除或不再完整），已放弃。',
+  downloader_error: () => '下载器拒绝加入这个种子。',
+  missing_files: () => '加入后下载器找不到文件，已自动移除（文件未动）。原种子的文件可能被移动或改名。',
+  tracker_unregistered: (s) => `${s} 的 tracker 不认这个种子，已自动移除（文件未动）。`,
+  tracker_auth_failed: (s) => `${s} 的 tracker 拒绝了你的 passkey，已自动移除（文件未动）。`,
+  already_present: () => '下载器里已经有这个种子。',
+  cancelled: () => '已随“全部移除”取消。',
+};
+function fmtIn(t) {
+  const s = Math.max(0, t - Date.now() / 1000);
+  return s < 90 ? '马上' : s < 3600 ? `约 ${Math.round(s / 60)} 分钟后` : s < 86400 ? `约 ${Math.round(s / 3600)} 小时后` : '明天';
 }
-function jobRow(x) {
-  return `<li class="row" style="padding:14px 0;gap:8px 18px;flex-wrap:wrap">
-    <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:2px"><b class="trunc" style="font-weight:600">${esc(x.name || '（未命名）')}</b>
-      <span class="small faint mono trunc">${esc(x.site)} · #${esc(x.torrent_id)} · ${fmtSize(x.size)} · ${fmtAgo(x.at)}</span></div>
-    ${track(x.step)}
-    <span class="small muted" style="flex:0 1 220px">已拿到种子编号，等待加种（下个版本开放）</span></li>`;
+// → {status, kind: ok|info|err|muted, note, live, failAt}
+function jobView(x) {
+  const r = x.reason && REASON[x.reason] ? REASON[x.reason](x.site) : '';
+  const base = `${fmtSize(x.size)} · ${x.site} #${x.torrent_id}`;
+  switch (x.state) {
+    case 'seeding': return { status: '做种中', kind: 'ok', note: x.reason === 'already_present' ? `${base} · ${r}` : `${base} · 直接用已有文件` };
+    case 'pending':
+      if (r) return { status: '稍后继续', kind: 'info', note: r, live: true };
+      return { status: '排队中', kind: 'info', note: x.not_before > Date.now() / 1000 ? `${base} · ${fmtIn(x.not_before)}开始（启动时间随机错开）` : base, live: true };
+    case 'fetching': return { status: '下载种子', kind: 'info', note: `${base} · 正在用你的账号下载种子`, live: true };
+    case 'verifying': return { status: '校验中', kind: 'info', note: `${base} · 正在核对文件列表`, live: true };
+    case 'adding': return { status: '加入中', kind: 'info', note: `${base} · 正在加入下载器`, live: true };
+    case 'observing': return { status: '等待确认', kind: 'info', note: `${base} · 已加入下载器，确认文件完整、tracker 正常后开始做种`, live: true };
+    case 'failed': return { status: '失败', kind: 'err', note: r || `失败：${x.reason || '未知原因'}`, failAt: x.step };
+    default: return { status: '已撤回', kind: 'muted', note: x.reason === 'cancelled' ? r : `${base} · 已从下载器移除（文件未动）` };
+  }
+}
+// 五步进度轨：前 step 步完成；failAt 为失败的那一步；live 时下一步闪烁
+function track(step, v = {}) {
+  const fail = v.failAt ?? -1;
+  const label = fail >= 0 ? `卡在「${STEPS[fail]}」这一步` : step >= 5 ? '五步全部完成' : `已完成到「${STEPS[Math.max(step - 1, 0)]}」`;
+  return `<span class="track" role="img" aria-label="${label}">${STEPS.map((_, i) => {
+    const cls = i === fail ? 'bad' : i < step ? 'on' : v.live && i === step ? 'live' : '';
+    return `${i ? `<i class="${i <= step && fail < 0 ? 'on' : ''}"></i>` : ''}<b class="${cls}"></b>`;
+  }).join('')}</span>`;
+}
+const KIND = { ok: 'var(--ink2)', info: 'var(--info)', err: 'var(--err)', muted: 'var(--ink3)' };
+function jobRow(x, balls = {}) {
+  const v = jobView(x);
+  return `<li class="job">
+    <div class="job-main"><b class="mono trunc" style="font-size:13px;font-weight:500">${esc(x.name || '（未命名）')}</b>
+      <span class="small" style="color:${x.state === 'failed' ? 'var(--err)' : 'var(--ink3)'}">${esc(v.note)}</span></div>
+    <div class="row" style="gap:10px;flex-wrap:nowrap"><span class="ball" aria-hidden="true" title="${esc(x.site)}">${esc(balls[x.site_ref] || '?')}</span>${track(x.step, v)}</div>
+    <span class="job-st" style="color:${KIND[v.kind]}">${v.status}</span>
+    <span class="job-t mono tiny faint">${fmtAgo(x.updated_at)}</span>
+    <span class="job-a">${x.state === 'failed' ? `<button class="btn sm" data-act="retry" data-arg="${x.id}">重试</button>` : ''}</span></li>`;
+}
+function feedRow(x, balls) {
+  const v = jobView(x);
+  const c = { ok: 'var(--ok)', info: 'var(--info)', err: 'var(--err)', muted: 'var(--ink3)' }[v.kind];
+  return `<div><span class="ball" aria-hidden="true">${esc(balls[x.site_ref] || '?')}</span>
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column"><span class="mono trunc" style="font-size:13px">${esc(x.name || '（未命名）')}</span><span class="tiny faint">${esc(x.site)} · <span class="mono">${fmtSize(x.size)} · ${fmtAgo(x.updated_at)}</span></span></div>
+    <span class="small" style="flex:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:${v.kind === 'ok' ? 'var(--ink2)' : c}"><span class="dot" style="background:${c}"></span>${v.status}</span></div>`;
+}
+function heatCard(heat) {
+  const max = Math.max(0, ...heat);
+  const start = new Date(Date.now() - 83 * 86400000);
+  const cells = heat.map((n, i) => {
+    const lv = n === 0 ? 0 : n < max * 0.25 ? 1 : n < max * 0.5 ? 2 : n < max * 0.75 ? 3 : 4;
+    const d = new Date(start.getTime() + i * 86400000);
+    return `<div title="${i === 83 ? '今天' : `${d.getMonth() + 1}月${d.getDate()}日`} · ${n} 个" style="border-radius:3px;background:${lv ? 'var(--acc)' : 'var(--heat0)'};opacity:${[1, 0.3, 0.55, 0.8, 1][lv]}"></div>`;
+  }).join('');
+  return `<section class="card" style="flex:4 1 300px;min-width:0" aria-labelledby="heat-h">
+    <div class="card-head"><h2 id="heat-h">最近 12 周</h2><span class="mono tiny faint">单日最多 ${fmtN(max)}</span></div>
+    <div role="img" aria-label="最近 12 周每天辅种数，今天 ${heat[83] || 0} 个，单日最多 ${max} 个" class="heat">${cells}</div>
+    <div class="row tiny faint" style="justify-content:space-between"><span>${start.getMonth() + 1}月${start.getDate()}日</span><span>今天</span></div>
+  </section>`;
 }
 async function pageJobs() {
   const [j, st] = await Promise.all([api('GET', '/jobs'), api('GET', '/status')]);
+  const balls = siteBalls(st.sites || []);
   let tab = 'all';
+  const RUN = ['pending', 'fetching', 'verifying', 'adding', 'observing'];
   const draw = () => {
-    const list = j.jobs.filter((x) => tab === 'all' || (tab === 'running' && x.status === 'new'));
+    const list = j.jobs.filter((x) => tab === 'all' || (tab === 'seeding' && x.state === 'seeding') || (tab === 'running' && RUN.includes(x.state)) || (tab === 'failed' && x.state === 'failed'));
     const tabs = [['all', '全部', j.counts.all], ['seeding', '做种中', j.counts.seeding], ['running', '进行中', j.counts.running], ['failed', '失败', j.counts.failed]];
     root.innerHTML = shell('#/jobs', `
       <div class="head"><div><h1 class="h1">辅种记录</h1><p class="muted">每一条都能看到走到了哪一步；卡住的会写明原因和下一步。</p></div></div>
       <div class="row" style="justify-content:space-between">
         <div class="seg" role="group" aria-label="按状态筛选">${tabs.map(([k, t, n]) => `<button type="button" aria-pressed="${k === tab}" data-act="tab" data-arg="${k}">${t}<span class="n">${n}</span></button>`).join('')}</div>
-        <div aria-hidden="true" class="row tiny faint" style="gap:14px"><span>发现</span>›<span>答题</span>›<span>下载</span>›<span>校验</span>›<span>做种</span></div>
+        <div aria-hidden="true" class="row tiny faint" style="gap:14px">${STEPS.join('<span>›</span>')}</div>
       </div>
-      <section class="card" aria-label="记录列表">${list.length ? `<ul class="divide" style="list-style:none;margin:0;padding:0">${list.map(jobRow).join('')}</ul>` : `<div class="empty">
+      <section class="card" aria-label="记录列表">${list.length ? `<ul class="divide" style="list-style:none;margin:0;padding:0">${list.map((x) => jobRow(x, balls)).join('')}</ul>` : `<div class="empty">
         <div class="track" aria-hidden="true" style="justify-content:center;margin-bottom:14px"><b></b><i></i><b></b><i></i><b></b><i></i><b></b><i></i><b></b></div>
-        ${tab === 'all' ? '还没有辅种记录。<br>社区里有人答对会员题、告知你种子编号后，会出现在这里。' : '这一类还没有记录。'}</div>`}</section>
+        ${tab === 'all' ? '还没有辅种记录。<br>社区里有人答对会员题、告知你种子编号后，会出现在这里。' : '这个分类下暂时没有记录。'}</div>`}</section>
       <section class="dashed row" aria-labelledby="danger-h" style="justify-content:space-between">
         <div class="grow"><h2 id="danger-h" style="font-size:15px;font-weight:600">想全部撤回？</h2><p class="muted">从下载器移除 xseed 加入的全部种子。文件不会被删除，原来的种子不受影响。</p></div>
         <button class="btn danger" data-act="removeAll">全部移除…</button>
@@ -355,11 +449,14 @@ async function pageJobs() {
   };
   draw();
   actions.tab = (k) => { tab = k; draw(); };
+  actions.retry = async (id) => { await api('POST', `/jobs/${id}/retry`); toast('已重新排队'); pageJobs(); };
   actions.removeAll = async () => {
     if (!confirm('确定从下载器移除 xseed 加入的全部种子吗？文件不会被删除。')) return;
     const r = await api('POST', '/remove-all');
-    toast(r.pending ? `已移除 ${r.removed} 个` : '目前没有 xseed 加入的种子');
+    toast(r.removed || r.skipped ? `已移除 ${r.removed} 个${r.skipped ? `，${r.skipped} 个已去掉 xseed 标签，未动` : ''}` : '目前没有 xseed 加入的种子');
+    pageJobs();
   };
+  if (j.counts.running) timer = setInterval(() => { if (location.hash === '#/jobs') api('GET', '/jobs').then((n) => { if (JSON.stringify(n) !== JSON.stringify(j)) { j.jobs = n.jobs; j.counts = n.counts; draw(); } }).catch(() => {}); }, 5000);
 }
 
 /* ───────── 设置 ───────── */
@@ -597,7 +694,7 @@ async function setupDryRun() {
     <dl class="kv3" style="border:1px solid var(--line);border-radius:14px;gap:1px;background:var(--line);overflow:hidden;padding:0;margin:0">
       ${[['本机种子', fmtN(s.ok)], ['参与站点', on.length + ' 站'], ['额外占用', '0 B']].map(([k, v]) => `<div style="background:var(--panel);padding:16px 18px"><dt>${k}</dt><dd style="font-size:26px;letter-spacing:-.03em">${v}</dd></div>`).join('')}
     </dl>
-    <p class="banner note" style="margin:0"><span class="dot"></span><span>${r.network && r.network.state === 'no_registry' ? '还没有配置社区节点。点亮星轨后，可以在“设置”里填写节点清单。' : '点亮星轨后，小助手会连上辅种网络：登记你的文件指纹，并找出社区里有同款的人。会员答题与自动加种将在后续版本开放。'}</span></p>
+    <p class="banner note" style="margin:0"><span class="dot"></span><span>${r.network && r.network.state === 'no_registry' ? '还没有配置社区节点。点亮星轨后，可以在“设置”里填写节点清单。' : '点亮星轨后，小助手会连上辅种网络：登记你的文件指纹，并找出社区里有同款的人。社区里有人答对会员题、告知种子编号后，会自动下载种子、核对并加入下载器。'}</span></p>
     <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">
       ${['新种子直接指向你已有的文件——<b>不复制、不移动、不删除</b>', '每站每天最多加 50 个，启动时间随机错开', '都带 <code class="mono" style="padding:1px 6px;border-radius:4px;background:var(--panel2)">xseed</code> 标签，随时可以在“辅种记录”里一键撤回'].map((t, i) => `<li class="row" style="gap:12px;flex-wrap:nowrap;align-items:baseline"><span class="mono tiny faint" aria-hidden="true">0${i + 1}</span><span>${t}</span></li>`).join('')}
     </ul>

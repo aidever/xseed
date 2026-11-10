@@ -1,6 +1,6 @@
 //! Transmission RPC（03 §2.5）。
 
-use super::{base, http, real_tracker, AddRequest, LocalTorrent, Meta, TAG};
+use super::{base, http, real_tracker, AddRequest, Announce, Health, LocalTorrent, Meta, Status, TAG};
 use anyhow::{anyhow, bail, Result};
 use base64::Engine;
 use reqwest::StatusCode;
@@ -118,12 +118,45 @@ impl Tr {
         if let (Some((from, to)), Some(h)) = (req.rename_root, added["hashString"].as_str()) {
             self.call("torrent-rename-path", json!({"ids": [h], "path": from, "name": to})).await?;
         }
+        // Transmission 没有“跳过校验”：显式校验一次，确认已有文件完整后才会启动（03 §1.10）
+        if let Some(h) = added["hashString"].as_str() {
+            self.call("torrent-verify", json!({"ids": [h]})).await?;
+        }
         Ok(())
     }
 
     pub async fn start(&self, hash: &str) -> Result<()> {
         self.call("torrent-start", json!({"ids": [hash]})).await?;
         Ok(())
+    }
+
+    pub async fn status(&self, hash: &str) -> Result<Option<Status>> {
+        let v = self.get(Some(hash), &["hashString", "name", "status", "error", "errorString", "percentDone", "downloadDir", "labels"]).await?;
+        Ok(v.into_iter().find(|t| t["hashString"].as_str().is_some_and(|h| h.eq_ignore_ascii_case(hash))).map(|t| {
+            let dir = t["downloadDir"].as_str().unwrap_or_default().to_string();
+            let name = t["name"].as_str().unwrap_or_default();
+            // status：1 等待校验、2 校验中；error：3 本地错误（文件缺失等）
+            let health = if t["error"].as_i64() == Some(3) {
+                Health::Broken(t["errorString"].as_str().unwrap_or("local error").into())
+            } else if matches!(t["status"].as_i64(), Some(1 | 2)) {
+                Health::Checking
+            } else {
+                Health::Ok
+            };
+            Status {
+                health,
+                progress: t["percentDone"].as_f64().unwrap_or(0.0),
+                content_path: format!("{}/{}", dir.trim_end_matches('/'), name),
+                save_path: dir,
+                tagged: t["labels"].as_array().is_some_and(|l| l.iter().any(|x| x.as_str() == Some(TAG))),
+            }
+        }))
+    }
+
+    pub async fn announce(&self, hash: &str) -> Result<Announce> {
+        let v = self.get(Some(hash), &["trackerStats"]).await?;
+        let stats = v.first().and_then(|x| x["trackerStats"].as_array().cloned()).unwrap_or_default();
+        Ok(tr_announce(&stats))
     }
 
     pub(crate) fn remove_args(hash: &str) -> Value {
@@ -137,9 +170,32 @@ impl Tr {
     }
 }
 
+fn tr_announce(stats: &[Value]) -> Announce {
+    let mut failed = None;
+    for s in stats {
+        if s["lastAnnounceSucceeded"].as_bool() == Some(true) {
+            return Announce::Working;
+        }
+        if s["hasAnnounced"].as_bool() == Some(true) {
+            let msg = s["lastAnnounceResult"].as_str().unwrap_or_default();
+            if !msg.is_empty() && msg != "Success" {
+                failed = Some(msg.to_string());
+            }
+        }
+    }
+    failed.map_or(Announce::Pending, Announce::Failed)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn announce_states() {
+        assert_eq!(tr_announce(&[json!({"hasAnnounced": false})]), Announce::Pending);
+        assert_eq!(tr_announce(&[json!({"hasAnnounced": true, "lastAnnounceSucceeded": false, "lastAnnounceResult": "unregistered torrent"})]), Announce::Failed("unregistered torrent".into()));
+        assert_eq!(tr_announce(&[json!({"hasAnnounced": true, "lastAnnounceSucceeded": true, "lastAnnounceResult": "Success"})]), Announce::Working);
+    }
 
     #[test]
     fn remove_never_deletes_data() {

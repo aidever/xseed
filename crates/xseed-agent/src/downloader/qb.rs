@@ -1,6 +1,6 @@
 //! qBittorrent WebUI API v2（03 §2.4）。
 
-use super::{base, http, real_tracker, AddRequest, Layout, LocalTorrent, Meta, TAG};
+use super::{base, http, real_tracker, AddRequest, Announce, Health, Layout, LocalTorrent, Meta, Status, TAG};
 use anyhow::{anyhow, bail, Result};
 use reqwest::{Response, StatusCode};
 use serde::Deserialize;
@@ -32,11 +32,19 @@ struct Info {
     infohash_v1: String,
     #[serde(default)]
     infohash_v2: String,
+    #[serde(default)]
+    content_path: String,
+    #[serde(default)]
+    tags: String,
 }
 
 #[derive(Deserialize)]
 struct Tracker {
     url: String,
+    #[serde(default)]
+    status: i64,
+    #[serde(default)]
+    msg: String,
 }
 
 #[derive(Deserialize)]
@@ -175,6 +183,22 @@ impl Qb {
         Ok(t.into_iter().map(|t| t.url).filter(|u| real_tracker(u)).collect())
     }
 
+    pub async fn status(&self, hash: &str) -> Result<Option<Status>> {
+        let list: Vec<Info> = self.send(|| self.http.get(self.url("api/v2/torrents/info")).query(&[("hashes", hash)])).await?.json().await?;
+        Ok(list.into_iter().find(|t| t.hash.eq_ignore_ascii_case(hash)).map(|t| Status {
+            health: qb_health(&t.state),
+            progress: t.progress,
+            save_path: t.save_path,
+            content_path: t.content_path,
+            tagged: t.tags.split(',').any(|x| x.trim() == TAG),
+        }))
+    }
+
+    pub async fn announce(&self, hash: &str) -> Result<Announce> {
+        let t: Vec<Tracker> = self.send(|| self.http.get(self.url("api/v2/torrents/trackers")).query(&[("hash", hash)])).await?.json().await?;
+        Ok(qb_announce(t.into_iter().filter(|t| real_tracker(&t.url)).map(|t| (t.status, t.msg))))
+    }
+
     pub(crate) fn add_form(req: &AddRequest, major: u32) -> Vec<(&'static str, String)> {
         let mut f = vec![
             ("savepath", req.save_path.clone()),
@@ -227,6 +251,27 @@ impl Qb {
     }
 }
 
+fn qb_health(state: &str) -> Health {
+    match state {
+        "missingFiles" | "error" => Health::Broken(state.into()),
+        "checkingUP" | "checkingDL" | "checkingResumeData" | "queuedForChecking" | "allocating" | "moving" => Health::Checking,
+        _ => Health::Ok,
+    }
+}
+
+/// qB tracker 状态：0 停用、1 未联系、2 正常、3 更新中、4 不可用。
+fn qb_announce(list: impl Iterator<Item = (i64, String)>) -> Announce {
+    let mut failed = None;
+    for (st, msg) in list {
+        match st {
+            2 => return Announce::Working,
+            4 if !msg.is_empty() => failed = Some(msg),
+            _ => {}
+        }
+    }
+    failed.map_or(Announce::Pending, Announce::Failed)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -236,6 +281,15 @@ mod tests {
         let f = Qb::delete_form("abc");
         assert!(f.contains(&("deleteFiles", "false".to_string())));
         assert!(!f.iter().any(|(k, v)| *k == "deleteFiles" && v != "false"));
+    }
+
+    #[test]
+    fn announce_states() {
+        assert_eq!(qb_announce([(1, String::new()), (2, String::new())].into_iter()), Announce::Working);
+        assert_eq!(qb_announce([(4, "Unregistered torrent".into())].into_iter()), Announce::Failed("Unregistered torrent".into()));
+        assert_eq!(qb_announce([(4, String::new()), (1, String::new())].into_iter()), Announce::Pending);
+        assert_eq!(qb_health("stalledUP"), Health::Ok);
+        assert_eq!(qb_health("missingFiles"), Health::Broken("missingFiles".into()));
     }
 
     #[test]
