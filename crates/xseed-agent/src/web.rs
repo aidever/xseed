@@ -651,7 +651,7 @@ async fn get_config(State(app): State<Shared>) -> Res {
     let c = app.cfg();
     ok(json!({
         "respond": c.respond, "daily_add_limit": c.daily_add_limit, "daily_answer_limit": c.daily_answer_limit,
-        "log_level": c.log_level, "pin_entry": c.pin_entry, "dry_run": c.dry_run, "registry": c.registry,
+        "log_level": c.log_level, "pin_entry": c.pin_entry, "dry_run": c.dry_run, "registry": c.registry, "registry_keys": c.registry_keys, "official_registry": !xseed_transport::registry::OFFICIAL_REGISTRY.is_empty(),
         "admin_changed_at": app.db.meta_get("admin_changed_at").and_then(|s| s.parse::<i64>().ok()),
     }))
 }
@@ -664,6 +664,7 @@ struct ConfigBody {
     log_level: Option<String>,
     pin_entry: Option<String>,
     registry: Option<String>,
+    registry_keys: Option<Vec<String>>,
 }
 
 async fn put_config(State(app): State<Shared>, Json(b): Json<ConfigBody>) -> Res {
@@ -692,6 +693,17 @@ async fn put_config(State(app): State<Shared>, Json(b): Json<ConfigBody>) -> Res
             return Err(bad("节点清单需填写 http(s) 地址或绝对路径"));
         }
         next.registry = v;
+    }
+    if let Some(keys) = b.registry_keys {
+        let mut out = vec![];
+        for k in keys.iter().map(|k| k.trim()).filter(|k| !k.is_empty()) {
+            let h = k.strip_prefix("ed25519:").unwrap_or(k);
+            if h.len() != 64 || hex::decode(h).is_err() {
+                return Err(bad("签名公钥格式应为 ed25519: 加 64 位十六进制"));
+            }
+            out.push(format!("ed25519:{}", h.to_ascii_lowercase()));
+        }
+        next.registry_keys = out;
     }
     next.validate().map_err(bad)?;
     app.update_cfg(|c| *c = next)?;

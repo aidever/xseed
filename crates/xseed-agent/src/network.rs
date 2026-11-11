@@ -228,6 +228,28 @@ impl Net {
 // ───────── 主循环 ─────────
 
 /// 网络后台任务：每分钟检查一次（配置变化时立即检查）。
+/// 读取并验证节点清单：经网络获取时必须带受信任公钥的签名；版本不得低于上次接受的版本（防回退）；
+/// 生成超过 30 天时告警但继续使用。通过后应用其中的站点定义与公共 tracker。
+async fn load_registry(app: &Shared, src: &str, extra_keys: &[String]) -> Result<Registry> {
+    use xseed_transport::registry;
+    let l = registry::load_signed(src, &xseed_transport::client::http_client(), &registry::trusted_keys(extra_keys)).await?;
+    let r = l.registry;
+    let key = format!("registry_version:{src}");
+    let last: u64 = app.db.meta_get(&key).and_then(|v| v.parse().ok()).unwrap_or(0);
+    if r.version < last {
+        anyhow::bail!("节点清单版本 {} 低于上次的 {}，拒绝回退", r.version, last);
+    }
+    if r.generated_at > 0 && now().saturating_sub(r.generated_at) > 30 * 86_400 {
+        tracing::warn!("节点清单已超过 30 天没有更新（版本 {}），请确认注册中心地址是否正确", r.version);
+    }
+    app.db.meta_set(&key, &r.version.to_string())?;
+    if l.signed_by.is_some() || !r.sites.is_empty() || !r.public_trackers.is_empty() {
+        crate::sites::apply_registry(&app.db, &r.sites, &r.public_trackers)?;
+    }
+    tracing::debug!("节点清单版本 {}（{}）", r.version, l.signed_by.as_deref().unwrap_or("本地未签名"));
+    Ok(r)
+}
+
 pub async fn run(app: Shared) {
     loop {
         if let Err(e) = tick(&app).await {
@@ -251,7 +273,11 @@ async fn tick(app: &Shared) -> Result<()> {
         net.set_state("off", None);
         return Ok(());
     }
-    let src = cfg.registry.trim().to_string();
+    // 配置为空时使用官方注册中心
+    let src = match cfg.registry.trim() {
+        "" => xseed_transport::registry::OFFICIAL_REGISTRY.to_string(),
+        s => s.to_string(),
+    };
     if src.is_empty() {
         disconnect(app);
         *net.reg.write().unwrap() = None;
@@ -264,7 +290,7 @@ async fn tick(app: &Shared) -> Result<()> {
         r.0 != src || now().saturating_sub(r.1) >= REGISTRY_EVERY
     };
     if stale {
-        match xseed_transport::registry::load(&src, &xseed_transport::client::http_client()).await {
+        match load_registry(app, &src, &cfg.registry_keys).await {
             Ok(r) => {
                 *net.reg.write().unwrap() = Some(Arc::new(r));
                 *net.reg_src.lock().unwrap() = (src.clone(), now());
@@ -299,6 +325,10 @@ async fn tick(app: &Shared) -> Result<()> {
         (None, Some(_)) => true,
         (Some((id, closed)), Some(w)) => *closed || *id != w.id,
     };
+    if !need && net.status.lock().unwrap().state != "online" {
+        // 入口连接一直正常，之前的错误（例如清单暂时读取失败）已经恢复
+        net.set_state("online", None);
+    }
     if need {
         if now() < *net.next_connect_at.lock().unwrap() {
             return Ok(());

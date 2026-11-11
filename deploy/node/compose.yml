@@ -1,0 +1,33 @@
+# 社区节点：xseed-node + Caddy（自动申请 TLS 证书）
+# 用法见 docs/05-发布与运维.md §3。需要一个解析到本机的域名，并开放 80 / 443 端口。
+services:
+  node:
+    image: ghcr.io/aidever/xseed:latest
+    entrypoint: ["xseed-node"]
+    restart: unless-stopped
+    environment:
+      XSEED_NODE_DATA: /data
+      XSEED_NODE_URL: https://${XSEED_DOMAIN:?请在 .env 中设置 XSEED_DOMAIN}
+      XSEED_NODE_REGISTRY: ${XSEED_REGISTRY:?请在 .env 中设置 XSEED_REGISTRY}
+      RUST_LOG: info
+    volumes:
+      - ./node-data:/data
+    expose:
+      - "7800"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      XSEED_DOMAIN: ${XSEED_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on:
+      - node
+
+volumes:
+  caddy-data:

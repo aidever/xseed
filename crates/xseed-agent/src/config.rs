@@ -31,7 +31,8 @@ pub struct WebUi {
 
 impl Default for WebUi {
     fn default() -> Self {
-        WebUi { listen: "0.0.0.0:7731".into(), allowed_hosts: vec![] }
+        // Windows 桌面默认只允许本机访问；NAS / Docker 默认对局域网开放
+        WebUi { listen: if cfg!(windows) { "127.0.0.1:7731" } else { "0.0.0.0:7731" }.into(), allowed_hosts: vec![] }
     }
 }
 
@@ -59,6 +60,8 @@ pub struct Config {
     pub pin_entry: String,
     /// 节点清单：http(s) 地址或本地文件。为空时不连接辅种网络。
     pub registry: String,
+    /// 追加的受信任注册中心公钥（自建注册中心时填写，`ed25519:<hex>`）。
+    pub registry_keys: Vec<String>,
     pub net: NetTuning,
 }
 
@@ -107,6 +110,7 @@ impl Default for Config {
             log_level: "info".into(),
             pin_entry: String::new(),
             registry: String::new(),
+            registry_keys: vec![],
             net: NetTuning::default(),
         }
     }

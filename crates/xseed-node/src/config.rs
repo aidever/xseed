@@ -11,6 +11,8 @@ pub struct Config {
     pub url: String,
     /// 节点清单：http(s) 地址或本地文件路径。
     pub registry: String,
+    /// 追加的受信任注册中心公钥（`ed25519:<hex>`）。经网络获取的清单必须由内置或这里的公钥签名。
+    pub registry_keys: Vec<String>,
     /// 信任反向代理的 `X-Forwarded-For`（只在前面确有代理时开启）。
     pub trust_proxy: bool,
     pub pow: PowCfg,
@@ -45,7 +47,7 @@ pub struct Limits {
 
 impl Default for Config {
     fn default() -> Self {
-        Config { listen: "0.0.0.0:7800".into(), url: String::new(), registry: "registry.json".into(), trust_proxy: false, pow: PowCfg::default(), index: IndexCfg::default(), limits: Limits::default() }
+        Config { listen: "0.0.0.0:7800".into(), url: String::new(), registry: "registry.json".into(), registry_keys: vec![], trust_proxy: false, pow: PowCfg::default(), index: IndexCfg::default(), limits: Limits::default() }
     }
 }
 impl Default for PowCfg {

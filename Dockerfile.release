@@ -1,0 +1,11 @@
+# CI 用镜像：直接复制各架构预先编译好的静态二进制（dist/<arch>/）。本地从源码构建请用 Dockerfile。
+FROM alpine:3.20
+ARG TARGETARCH
+RUN apk add --no-cache ca-certificates tzdata && adduser -D -u 1000 xseed && mkdir /data && chown xseed /data
+COPY dist/${TARGETARCH}/xseed-agent dist/${TARGETARCH}/xseed-node /usr/local/bin/
+USER xseed
+ENV XSEED_DATA=/data
+VOLUME /data
+ENV XSEED_NODE_DATA=/data/node
+EXPOSE 7731 7800
+ENTRYPOINT ["xseed-agent"]

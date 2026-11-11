@@ -36,3 +36,8 @@ url = "2"
 
 [dev-dependencies]
 tempfile = "3"
+
+# Windows：托盘图标与消息循环
+[target.'cfg(windows)'.dependencies]
+tray-icon = { version = "0.26", default-features = false }
+windows-sys = { version = "0.61", features = ["Win32_UI_WindowsAndMessaging", "Win32_Foundation"] }

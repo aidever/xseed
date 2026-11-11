@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="880" viewBox="0 0 1280 880" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC','WenQuanYi Zen Hei',sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC','WenQuanYi Zen Hei',sans-serif">
   <defs>
-    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/></marker>
     <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/></marker>
     <marker id="ay" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
     <style>
       .h{font-size:17px;font-weight:700;fill:#0f172a}
@@ -13,124 +13,102 @@
     </style>
   </defs>
 
-  <rect width="1280" height="880" fill="#ffffff"/>
+  <rect width="1280" height="900" fill="#ffffff"/>
 
-  <!-- 标题 -->
-  <text x="640" y="44" text-anchor="middle" style="font-size:26px;font-weight:700;fill:#0f172a">去中心化辅种 · 架构图</text>
+  <text x="640" y="44" text-anchor="middle" style="font-size:26px;font-weight:700;fill:#0f172a">去中心化辅种 · 架构图（设计 2.0）</text>
   <text x="640" y="72" text-anchor="middle" class="g" style="font-size:14px">黑色大字：它在做什么　｜　<tspan fill="#7c3aed">紫色小字：用什么技术实现</tspan>　｜　蓝色圆圈：步骤顺序</text>
 
-  <!-- 牵线服务 -->
-  <rect x="440" y="96" width="400" height="136" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
-  <text x="640" y="126" text-anchor="middle" class="h">牵线节点（任何人都可以提供）</text>
-  <text x="640" y="152" text-anchor="middle" class="b">帮两台设备找到彼此、交换联系方式</text>
-  <text x="640" y="174" text-anchor="middle" class="t">Rust 节点 · GitHub 注册中心 · 可水平扩展</text>
-  <rect x="490" y="188" width="300" height="28" rx="14" fill="#e2e8f0"/>
-  <text x="640" y="207" text-anchor="middle" class="g" style="fill:#475569">只看到一次性随机编号 · 看不到任何内容</text>
+  <!-- 社区节点 -->
+  <rect x="400" y="96" width="480" height="150" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="640" y="126" text-anchor="middle" class="h">社区节点（任何人都可以提供）</text>
+  <text x="640" y="152" text-anchor="middle" class="b">登记簿：谁有“某个文件指纹”（只有匿名代号）</text>
+  <text x="640" y="174" text-anchor="middle" class="b">传话筒：转发加密消息，双方互相看不到 IP</text>
+  <text x="640" y="196" text-anchor="middle" class="t">Rust 节点 · HRW 分桶 · GitHub 签名清单 · 1c1g 可服务约 1 万台</text>
+  <rect x="455" y="208" width="370" height="26" rx="13" fill="#e2e8f0"/>
+  <text x="640" y="226" text-anchor="middle" class="g" style="fill:#475569">不知道站点、种子编号，也无法把 IP 和文件对上</text>
 
-  <!-- 找人连线 -->
-  <path d="M330,262 C330,200 380,175 438,170" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
-  <path d="M950,262 C950,200 900,175 842,170" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
-  <circle cx="196" cy="214" r="11" fill="#2563eb"/><text x="196" y="218.5" text-anchor="middle" class="n">2</text>
-  <text x="214" y="211" class="s">找人</text>
-  <text x="214" y="228" class="t">一次性信箱 ID</text>
-  <text x="968" y="211" class="s">登记“我有这份文件”</text>
-  <text x="968" y="228" class="t">key = H(指纹)</text>
+  <!-- 左：你的小助手 -->
+  <rect x="40" y="290" width="370" height="330" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="225" y="320" text-anchor="middle" class="h">你的设备（NAS / 电脑）</text>
+  <rect x="64" y="336" width="322" height="58" rx="10" fill="#fff" stroke="#e2e8f0"/>
+  <text x="225" y="360" text-anchor="middle" class="b">qBittorrent / Transmission</text>
+  <text x="225" y="380" text-anchor="middle" class="t">只通过下载器网页接口，不读硬盘</text>
+  <text x="64" y="424" class="b" style="font-weight:600">辅种小助手</text>
+  <text x="64" y="448" class="s">· 计算文件指纹（文件结构，不含根目录名）</text>
+  <text x="78" y="466" class="t">SHA-256(每个文件的路径 + 大小)</text>
+  <text x="64" y="492" class="s">· 账号、passkey、Cookie 只存在本机</text>
+  <text x="78" y="510" class="t">本机加密保存，永不发送给任何人</text>
+  <text x="64" y="536" class="s">· 新种子指向已有文件，不复制不移动</text>
+  <text x="78" y="554" class="t">停止状态加入 → 确认 100% → 做种</text>
+  <text x="64" y="580" class="s">· 带 xseed 标签，一键撤回（保留文件）</text>
+  <text x="78" y="598" class="t">Cookie 可由 PT-depiler 经 WebDAV 同步</text>
 
-  <!-- 左：你的设备 -->
-  <rect x="40" y="262" width="360" height="330" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="220" y="292" text-anchor="middle" class="h">你的设备（NAS / 盒子）</text>
-  <rect x="64" y="308" width="312" height="62" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="220" y="334" text-anchor="middle" class="b" style="font-weight:700">qBittorrent / Transmission</text>
-  <text x="220" y="355" text-anchor="middle" class="t">WebUI API / RPC（只连本机）</text>
-  <line x1="120" y1="372" x2="120" y2="398" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
-  <circle cx="146" cy="385" r="11" fill="#2563eb"/><text x="146" y="389.5" text-anchor="middle" class="n">1</text>
-  <text x="164" y="390" class="s">读取已 100% 完成的种子</text>
-  <rect x="64" y="400" width="312" height="172" rx="10" fill="#ecfdf5" stroke="#86efac"/>
-  <text x="220" y="426" text-anchor="middle" class="b" style="font-weight:700">辅种小助手</text>
-  <text x="82" y="452" class="s">· 计算文件指纹</text>
-  <text x="96" y="470" class="t">SHA-256(每个文件的路径 + 大小)</text>
-  <text x="82" y="496" class="s">· 账号 / passkey 只存在本机</text>
-  <text x="96" y="514" class="t">永不发送给任何人</text>
-  <text x="82" y="540" class="s">· 每次连接生成临时密钥</text>
-  <text x="96" y="558" class="t">X25519，用完即弃</text>
+  <!-- 右：对方小助手 -->
+  <rect x="870" y="290" width="370" height="330" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="1055" y="320" text-anchor="middle" class="h">对方设备（也有这份文件的人）</text>
+  <rect x="894" y="336" width="322" height="58" rx="10" fill="#fff" stroke="#e2e8f0"/>
+  <text x="1055" y="360" text-anchor="middle" class="b">qBittorrent / Transmission</text>
+  <text x="1055" y="380" text-anchor="middle" class="t">他在 X 站做种这份文件</text>
+  <text x="894" y="424" class="b" style="font-weight:600">辅种小助手</text>
+  <text x="894" y="448" class="s">· 每个种子一个匿名代号，每周更换</text>
+  <text x="908" y="466" class="t">AES 加密的代号 · 两跳登记</text>
+  <text x="894" y="492" class="s">· 只回答答对会员题的人</text>
+  <text x="908" y="510" class="t">题目是该站随机的近期种子</text>
+  <text x="894" y="536" class="s">· 只说“X 站 #编号”，不发种子文件</text>
+  <text x="908" y="554" class="t">不说名称、不说其他站</text>
+  <text x="894" y="580" class="s">· 每站每天的答题、告知有上限</text>
+  <text x="908" y="598" class="t">可随时关闭“帮别人找到辅种”</text>
 
-  <!-- 右：对方设备 -->
-  <rect x="880" y="262" width="360" height="330" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="1060" y="292" text-anchor="middle" class="h">对方设备（也有这份文件的人）</text>
-  <rect x="904" y="308" width="312" height="62" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="1060" y="334" text-anchor="middle" class="b" style="font-weight:700">qBittorrent / Transmission</text>
-  <text x="1060" y="355" text-anchor="middle" class="t">WebUI API / RPC（只连本机）</text>
-  <line x1="1060" y1="372" x2="1060" y2="398" stroke="#94a3b8" stroke-width="2" marker-end="url(#ay)"/>
-  <rect x="904" y="400" width="312" height="172" rx="10" fill="#ecfdf5" stroke="#86efac"/>
-  <text x="1060" y="426" text-anchor="middle" class="b" style="font-weight:700">辅种小助手</text>
-  <text x="922" y="452" class="s">· 知道这份文件在哪些站</text>
-  <text x="936" y="470" class="t">站点原版种子（发送前去掉凭证）</text>
-  <text x="922" y="496" class="s">· 只回答通过三道锁的人</text>
-  <text x="936" y="514" class="t">每天应答次数有上限</text>
-  <text x="922" y="540" class="s">· 只说双方共同所在的站</text>
-  <text x="936" y="558" class="t">其余站点一概不提</text>
+  <!-- 1 登记 -->
+  <path d="M1000,288 C1000,230 950,190 882,178" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
+  <circle cx="1018" cy="236" r="11" fill="#2563eb"/><text x="1018" y="240.5" text-anchor="middle" class="n">1</text>
+  <text x="1036" y="232" class="s">登记“我有指纹 F”</text>
+  <text x="1036" y="249" class="t">经两个节点转发，单个节点无法关联 IP</text>
 
-  <!-- 加密直连 -->
-  <circle cx="470" cy="380" r="11" fill="#2563eb"/><text x="470" y="384.5" text-anchor="middle" class="n">3</text>
-  <text x="488" y="385" class="b" style="font-weight:700;fill:#15803d">加密对话（双方互相看不到 IP）</text>
-  <text x="640" y="408" text-anchor="middle" class="t">Noise 端到端加密 · 全程经节点转发 · 不直连</text>
-  <line x1="380" y1="424" x2="900" y2="424" stroke="#16a34a" stroke-width="4" marker-start="url(#ag)" marker-end="url(#ag)"/>
+  <!-- 2 查询 -->
+  <path d="M280,288 C280,230 330,190 398,178" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
+  <circle cx="132" cy="236" r="11" fill="#2563eb"/><text x="132" y="240.5" text-anchor="middle" class="n">2</text>
+  <text x="150" y="232" class="s">查询“谁也有 F”</text>
+  <text x="150" y="249" class="t">得到若干匿名代号</text>
 
-  <!-- 三道锁 -->
-  <circle cx="420" cy="458" r="11" fill="#2563eb"/><text x="420" y="462.5" text-anchor="middle" class="n">4</text>
-  <text x="438" y="463" class="s" style="font-weight:700">过三道锁，才交换「双方都是会员的站」的种子信息</text>
+  <!-- 3 加密会话 -->
+  <path d="M414,350 L866,350" fill="none" stroke="#2563eb" stroke-width="2.5" marker-start="url(#ab)" marker-end="url(#ab)"/>
+  <circle cx="640" cy="322" r="11" fill="#2563eb"/><text x="640" y="326.5" text-anchor="middle" class="n">3</text>
+  <text x="640" y="376" text-anchor="middle" class="b">加密对话（全程经节点转发，不直连）</text>
+  <text x="640" y="396" text-anchor="middle" class="t">Noise XXpsk3 · 密码由文件指纹算出 · 没有同款文件连不上</text>
 
-  <rect x="410" y="478" width="146" height="114" rx="10" fill="#fffbeb" stroke="#fdba74" stroke-width="1.5"/>
-  <text x="483" y="502" text-anchor="middle" class="b" style="font-weight:700">锁1 文件暗号</text>
-  <text x="483" y="524" text-anchor="middle" class="s">没有这份文件</text>
-  <text x="483" y="542" text-anchor="middle" class="s">→ 连都连不上</text>
-  <text x="483" y="564" text-anchor="middle" class="t">Noise XX + PSK</text>
-  <text x="483" y="580" text-anchor="middle" class="t">PSK = HKDF(指纹)</text>
+  <!-- 4 答题 -->
+  <rect x="440" y="420" width="400" height="120" rx="12" fill="#fefce8" stroke="#fde047"/>
+  <circle cx="462" cy="444" r="11" fill="#2563eb"/><text x="462" y="448.5" text-anchor="middle" class="n">4</text>
+  <text x="480" y="449" class="b" style="font-weight:600">会员答题</text>
+  <text x="458" y="474" class="s">对方出题：“X 站 #12345 的 info_hash 是多少？”</text>
+  <text x="458" y="496" class="s">你用自己的 X 站账号下载这个种子来作答</text>
+  <text x="458" y="518" class="t">答案与本次会话绑定，转交给别人答无效</text>
 
-  <rect x="567" y="478" width="146" height="114" rx="10" fill="#fffbeb" stroke="#fdba74" stroke-width="1.5"/>
-  <text x="640" y="502" text-anchor="middle" class="b" style="font-weight:700">锁2 现场抽查</text>
-  <text x="640" y="524" text-anchor="middle" class="s">只有文件列表</text>
-  <text x="640" y="542" text-anchor="middle" class="s">→ 答不出来</text>
-  <text x="640" y="564" text-anchor="middle" class="t">随机字节区间</text>
-  <text x="640" y="580" text-anchor="middle" class="t">SHA-256 挑战</text>
+  <!-- 5 告知 -->
+  <path d="M866,580 L414,580" fill="none" stroke="#16a34a" stroke-width="2.5" marker-end="url(#ag)"/>
+  <circle cx="640" cy="560" r="11" fill="#16a34a"/><text x="640" y="564.5" text-anchor="middle" class="n">5</text>
+  <text x="640" y="604" text-anchor="middle" class="b">答对后只告诉你：“X 站 #67890”</text>
+  <text x="640" y="622" text-anchor="middle" class="g">他不在 X 站，就回答“没有”——先答题后区分，不泄露他在哪些站</text>
 
-  <rect x="724" y="478" width="146" height="114" rx="10" fill="#fffbeb" stroke="#fdba74" stroke-width="1.5"/>
-  <text x="797" y="502" text-anchor="middle" class="b" style="font-weight:700">锁3 会员验证</text>
-  <text x="797" y="524" text-anchor="middle" class="s">没有该站账号</text>
-  <text x="797" y="542" text-anchor="middle" class="s">→ 拿不到种子信息</text>
-  <text x="797" y="564" text-anchor="middle" class="t">站点周钥匙 AEAD</text>
-  <text x="797" y="580" text-anchor="middle" class="t">或 scrape 挑战</text>
+  <!-- PT 站 -->
+  <rect x="400" y="680" width="480" height="96" rx="14" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="640" y="712" text-anchor="middle" class="h">PT 站点 X</text>
+  <text x="640" y="738" text-anchor="middle" class="b">你只用自己的账号访问，和平时手动下载一样</text>
+  <text x="640" y="760" text-anchor="middle" class="t">每站每分钟最多 2 次 · 每天最多加 50 个</text>
 
-  <!-- 中继 -->
-  <path d="M380,594 C392,660 440,668 488,668" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
-  <path d="M900,594 C888,660 840,668 792,668" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ay)"/>
-  
-  <rect x="490" y="620" width="300" height="96" rx="14" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 5"/>
-  <text x="640" y="648" text-anchor="middle" class="b" style="font-weight:700">信箱节点（各连自己选的一个）</text>
-  <text x="640" y="670" text-anchor="middle" class="s">只转发乱码，对方拿不到你的 IP</text>
-  <text x="640" y="694" text-anchor="middle" class="t">两跳转发 · 登记按索引节点公钥加密</text>
+  <!-- 6 下载并加种 -->
+  <path d="M225,622 C225,690 300,725 396,728" fill="none" stroke="#16a34a" stroke-width="2.5" marker-end="url(#ag)"/>
+  <circle cx="225" cy="660" r="11" fill="#16a34a"/><text x="225" y="664.5" text-anchor="middle" class="n">6</text>
+  <text x="70" y="700" class="s">用你的 passkey 下载 #67890</text>
+  <text x="70" y="718" class="s">核对 info_hash 与文件结构一致</text>
+  <text x="70" y="736" class="s">交给下载器，直接用已有文件做种</text>
 
-  <!-- PT 站点 -->
-  <line x1="220" y1="574" x2="220" y2="634" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>
-  <rect x="40" y="636" width="360" height="124" rx="14" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1.5"/>
-  <text x="220" y="664" text-anchor="middle" class="h">拿到种子并做种</text>
-  <circle cx="72" cy="688" r="11" fill="#2563eb"/><text x="72" y="692.5" text-anchor="middle" class="n">5</text>
-  <text x="90" y="693" class="s">对方的种子换上你的 passkey</text>
-  <text x="90" y="716" class="s">交给下载器直接做种，不读盘</text>
-  <text x="90" y="740" class="t">不行再从站点下载 · 免 hash 校验</text>
+  <!-- 站长 -->
+  <text x="910" y="712" class="s">站长可在注册中心表态</text>
+  <text x="910" y="730" class="s">“不允许”后，小助手立即停止该站</text>
 
-  <!-- 图例 -->
-  <rect x="880" y="636" width="360" height="124" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-  <text x="904" y="662" class="b" style="font-weight:700">图例</text>
-  <line x1="904" y1="684" x2="964" y2="684" stroke="#16a34a" stroke-width="4"/>
-  <text x="976" y="689" class="s">端到端加密，只有双方看得懂</text>
-  <line x1="904" y1="710" x2="964" y2="710" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6"/>
-  <text x="976" y="715" class="s">经节点转发，只有随机编号或乱码</text>
-  <line x1="904" y1="736" x2="964" y2="736" stroke="#2563eb" stroke-width="2"/>
-  <text x="976" y="741" class="s">本机内部 / 你和站点之间</text>
-
-  <!-- 安全要点 -->
-  <rect x="40" y="790" width="1200" height="64" rx="14" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
-  <text x="640" y="818" text-anchor="middle" class="b" style="font-weight:700;fill:#166534">安全要点</text>
-  <text x="640" y="842" text-anchor="middle" class="s">没有中心服务器 · 账号永不出本机 · 对方拿不到你的 IP · 节点看不到内容 · 没文件 / 没账号什么也拿不到 · 假信息对不上本机文件结构就丢弃</text>
+  <!-- 底注 -->
+  <text x="640" y="828" text-anchor="middle" class="g" style="font-size:13px">只辅种完全相同的内容：总大小与每个文件的路径、大小都一致（最外层文件夹名可以不同）</text>
+  <text x="640" y="852" text-anchor="middle" class="g" style="font-size:13px">一次对话只问一个站；每次对话换新的回信代号，对方无法把多次询问关联到同一个人</text>
 </svg>

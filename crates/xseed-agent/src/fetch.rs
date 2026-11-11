@@ -132,6 +132,21 @@ fn trait_set(app: &Shared, site_ref: &str, name: &str, value: &str) {
     );
 }
 
+/// 模板的主机必须是该站自己的域名（或其子域名），凭证不会被带到别处。
+fn template_host_ok(tpl: &str, domains: &[String]) -> bool {
+    let Ok(u) = url::Url::parse(&tpl.replace("{id}", "1").replace("{passkey}", "x")) else { return false };
+    if !matches!(u.scheme(), "https" | "http") {
+        return false;
+    }
+    let host = match (u.host_str(), u.port()) {
+        (Some(h), Some(p)) => format!("{h}:{p}"),
+        (Some(h), None) => h.to_string(),
+        _ => return false,
+    };
+    let bare = u.host_str().unwrap_or_default();
+    domains.iter().any(|d| host == *d || bare == d || bare.ends_with(&format!(".{d}")))
+}
+
 /// 候选下载地址：（模板，是否带 Cookie）。模板中的 `{id}` 在请求时替换。
 fn candidates(app: &Shared, site_ref: &str) -> Vec<(String, bool)> {
     let cookie = cred(app, site_ref, "cookie").is_some();
@@ -143,6 +158,15 @@ fn candidates(app: &Shared, site_ref: &str) -> Vec<(String, bool)> {
     let mut out = Vec::new();
     if let Some(t) = trait_get(app, site_ref, "download") {
         out.push((t, cookie));
+    }
+    // 注册中心下发的模板：`{passkey}` 在这里替换，`{id}` 在请求时替换；不含 passkey 的模板带 Cookie
+    if let Some(t) = trait_get(app, site_ref, "download_template").filter(|t| template_host_ok(t, &domains(app, site_ref))) {
+        match (&passkey, t.contains("{passkey}")) {
+            (Some(pk), true) => out.push((t.replace("{passkey}", pk), false)),
+            (None, true) => {}
+            (_, false) if cookie => out.push((t, true)),
+            _ => {}
+        }
     }
     for d in domains(app, site_ref) {
         for s in &schemes {
@@ -227,5 +251,15 @@ mod tests {
         assert_eq!(super::registrable("example.org"), "example.org");
         assert_eq!(super::registrable("127.0.0.1:18091"), "127.0.0.1:18091");
         assert_eq!(super::registrable("t.example.org:8443"), "t.example.org:8443");
+    }
+
+    #[test]
+    fn template_must_stay_on_site() {
+        let d = vec!["example.org".to_string()];
+        assert!(super::template_host_ok("https://pt.example.org/download.php?id={id}&passkey={passkey}", &d));
+        assert!(super::template_host_ok("https://example.org/dl/{id}", &d));
+        assert!(!super::template_host_ok("https://evil.org/?u=example.org&id={id}&pk={passkey}", &d));
+        assert!(!super::template_host_ok("https://example.org.evil.org/{id}", &d));
+        assert!(!super::template_host_ok("ftp://example.org/{id}", &d));
     }
 }

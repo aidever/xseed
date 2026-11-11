@@ -181,10 +181,19 @@ impl Node {
         *self.registry.write().unwrap() = Arc::new(r);
     }
 
+    /// 当前清单的版本（尚未载入或为空清单时为 None）。
+    fn registry_version(&self) -> Option<u64> {
+        let r = self.registry.read().unwrap();
+        (!r.nodes.is_empty()).then_some(r.version)
+    }
+
     pub async fn reload_registry(&self) -> Result<()> {
         let src = if self.cfg.registry.starts_with("http") || Path::new(&self.cfg.registry).is_absolute() { self.cfg.registry.clone() } else { self.dir.join(&self.cfg.registry).to_string_lossy().into_owned() };
-        let r = registry::load(&src, &self.http).await?;
-        self.set_registry(r);
+        let l = registry::load_signed(&src, &self.http, &registry::trusted_keys(&self.cfg.registry_keys)).await?;
+        if let Some(cur) = self.registry_version() {
+            anyhow::ensure!(l.registry.version >= cur, "节点清单版本 {} 低于当前的 {}，拒绝回退", l.registry.version, cur);
+        }
+        self.set_registry(l.registry);
         Ok(())
     }
 

@@ -217,7 +217,7 @@ async function pageOverview() {
   const pipeNote = net.state === 'online' ? `今天探测 ${fmtN(net.probes_today)} 次；社区里找到 ${fmtN(net.peers)} 个同款持有者，答对会员题 ${fmtN(net.answers_today)} 次`
     : net.state === 'connecting' ? '正在连接辅种网络…'
     : net.state === 'error' ? `辅种网络暂时连不上：${net.error || ''}`
-    : net.state === 'no_registry' ? '还没有配置社区节点，可在“设置”中填写节点清单' : '完成设置后开始连接辅种网络';
+    : net.state === 'no_registry' ? '还没有可用的社区节点清单，可在“设置”中填写' : '完成设置后开始连接辅种网络';
   const steps = [['01', '发现同款文件', '社区里有人有同样的文件'], ['02', '会员题通过', '对方证明了是该站会员'], ['03', '下载种子', '用你自己的账号下载'], ['04', '校验一致', '文件列表逐个比对'], ['05', '开始做种', '直接用已有文件']];
   root.innerHTML = shell('#/', `
     <div class="row" style="justify-content:space-between">
@@ -362,6 +362,7 @@ const REASON = {
   tracker_auth_failed: (s) => `${s} 的 tracker 拒绝了你的 passkey，已自动移除（文件未动）。`,
   already_present: () => '下载器里已经有这个种子。',
   cancelled: () => '已随“全部移除”取消。',
+  site_disabled: (s) => `${s} 已关闭辅种（你关掉了开关，或站长表态不允许），没有加入。`,
 };
 function fmtIn(t) {
   const s = Math.max(0, t - Date.now() / 1000);
@@ -381,7 +382,7 @@ function jobView(x) {
     case 'adding': return { status: '加入中', kind: 'info', note: `${base} · 正在加入下载器`, live: true };
     case 'observing': return { status: '等待确认', kind: 'info', note: `${base} · 已加入下载器，确认文件完整、tracker 正常后开始做种`, live: true };
     case 'failed': return { status: '失败', kind: 'err', note: r || `失败：${x.reason || '未知原因'}`, failAt: x.step };
-    default: return { status: '已撤回', kind: 'muted', note: x.reason === 'cancelled' ? r : `${base} · 已从下载器移除（文件未动）` };
+    default: return { status: x.reason === 'site_disabled' ? '已取消' : '已撤回', kind: 'muted', note: r || `${base} · 已从下载器移除（文件未动）` };
   }
 }
 // 五步进度轨：前 step 步完成；failAt 为失败的那一步；live 时下一步闪烁
@@ -486,8 +487,9 @@ async function pageSettings() {
         <span class="status ${d.ok === false ? 'err-t' : 'ok-t'}"><span class="dot ${d.ok === false ? 'err' : 'ok'}"></span>${d.ok === false ? '连接失败' : '已连接'}</span><a class="btn sm" href="#/setup/2?edit=1">修改</a></div>
       <div class="setting"><div class="grow"><label for="entry" style="font-weight:600">入口节点</label><div class="small faint">消息都经它转发：它知道你的 IP，看不到内容。${net.entry ? `当前：<span class="mono">${esc(net.entry.host)}</span>` : ''}</div></div>
         <select id="entry" class="input" style="flex:0 1 240px;height:40px" ${(net.nodes || []).length ? '' : 'disabled'}><option value="">自动（延迟最低）</option>${(net.nodes || []).map((x) => `<option value="${esc(x.id)}" ${c.pin_entry === x.id ? 'selected' : ''}>${esc(x.host)}${x.ok ? (x.rtt_ms != null ? ' · ' + x.rtt_ms + ' ms' : '') : ' · 不可用'}</option>`).join('')}</select></div>
-      <form class="setting" data-submit="registry"><div class="grow"><label for="registry" style="font-weight:600">社区节点清单</label><div class="small faint">${net.state === 'online' ? `已连接 ${(net.nodes || []).filter((x) => x.ok).length} / ${(net.nodes || []).length} 个节点` : net.state === 'error' ? `<span class="err-t">${esc(net.error || '')}</span>` : '官方清单将在正式发布时内置；测试阶段可填写自建节点清单的地址'}</div></div>
-        <input class="input mono" id="registry" value="${esc(c.registry || '')}" placeholder="https://… /registry.json" autocomplete="off" style="flex:0 1 300px;height:40px"><button class="btn sm" type="submit">保存</button></form>
+      <form class="setting" data-submit="registry"><div class="grow"><label for="registry" style="font-weight:600">社区节点清单</label><div class="small faint">${net.state === 'online' ? `已连接 ${(net.nodes || []).filter((x) => x.ok).length} / ${(net.nodes || []).length} 个节点` : net.state === 'error' ? `<span class="err-t">${esc(net.error || '')}</span>` : (c.official_registry ? '留空即使用官方清单；自建注册中心时填写其地址与签名公钥' : '官方清单尚未发布；可填写自建节点清单的地址')}</div></div>
+        <div style="flex:0 1 300px;display:flex;flex-direction:column;gap:8px;min-width:0"><input class="input mono" id="registry" value="${esc(c.registry || '')}" placeholder="${c.official_registry ? '官方清单' : 'https://… /registry.json'}" autocomplete="off" style="height:40px">
+          <input class="input mono" id="registry-keys" value="${esc((c.registry_keys || []).join(' '))}" placeholder="签名公钥 ed25519:…（可选）" aria-label="自建注册中心的签名公钥" autocomplete="off" style="height:40px"></div><button class="btn sm" type="submit">保存</button></form>
       <div class="setting"><div class="grow"><b style="font-weight:600" class="muted">加种前抽查文件</b><div class="small faint">需要给小助手映射数据目录。默认不读硬盘，直接信任下载器的做种状态。</div></div>
         <button type="button" class="switch" role="switch" aria-checked="false" aria-label="加种前抽查文件" disabled></button></div>
       <div class="setting"><div class="grow"><label for="theme" style="font-weight:600">外观</label><div class="small faint">只保存在这台浏览器里</div></div>
@@ -501,7 +503,7 @@ async function pageSettings() {
   const sel = document.getElementById('theme'); sel.value = getTheme(); sel.addEventListener('change', () => setTheme(sel.value));
   const ent = document.getElementById('entry');
   ent.addEventListener('change', () => api('PUT', '/config', { pin_entry: ent.value }).then(() => toast(ent.value ? '已固定入口节点' : '已改为自动选择')).catch((e) => toast(e.message)));
-  actions.registry = async () => { await api('PUT', '/config', { registry: val('registry') }); toast('已保存，正在连接…'); setTimeout(pageSettings, 1500); };
+  actions.registry = async () => { await api('PUT', '/config', { registry: val('registry'), registry_keys: val('registry-keys').split(/[\s,]+/).filter(Boolean) }); toast('已保存，正在连接…'); setTimeout(pageSettings, 1500); };
   actions.step = (arg) => {
     const [k, dir] = arg.split(':');
     if (k === 'add') { add = Math.max(10, Math.min(500, add + (dir === '+' ? 10 : -10))); document.getElementById('out-add').textContent = add; }

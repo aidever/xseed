@@ -1,5 +1,6 @@
 //! xseed 社区节点（03 §1.4、§1.7、§2.1、§3.2）。
 
+pub mod registry_tool;
 pub mod config;
 pub mod http;
 pub mod limit;

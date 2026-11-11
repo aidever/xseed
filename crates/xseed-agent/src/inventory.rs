@@ -52,7 +52,7 @@ fn known(db: &Db, downloader: &str, hash: &str) -> bool {
 pub async fn scan(db: &Db, vault: &Vault, downloader_id: &str, client: &Client, full: bool, progress: &Progress) -> Result<usize> {
     let list = client.list_completed().await?;
     let defs = sites::load_defs(db);
-    let public = sites::public_trackers();
+    let public = sites::public_trackers(db);
     let started = now();
     {
         let mut p = progress.lock().unwrap();

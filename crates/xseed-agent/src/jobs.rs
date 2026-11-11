@@ -187,6 +187,12 @@ async fn process(app: &Shared, id: i64) {
     let Some((save_path, root_name, single_file, category)) = j.local.clone() else {
         return fail(app, &j, "source_state_changed");
     };
+    // 用户关掉了该站，或站长表态不允许：不再加种
+    let enabled: bool = app.db.lock().query_row("SELECT enabled FROM sites WHERE site_ref=?1", [&j.site], |r| r.get(0)).unwrap_or(true);
+    if !enabled {
+        tracing::info!("{} 已关闭，取消 #{}", j.site, j.torrent_id);
+        return set_state(app, j.id, "removed", Some("site_disabled"));
+    }
     if quota_left(app, &j.site) <= 0 {
         tracing::info!("{} 今日加种已达上限，明天继续", j.site);
         return defer(app, j.id, secs_to_tomorrow(), "daily_limit", false);

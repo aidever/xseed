@@ -1,0 +1,4 @@
+{$XSEED_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy node:7800
+}

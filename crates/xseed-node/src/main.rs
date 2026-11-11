@@ -9,6 +9,13 @@ const HELP: &str = "xseed-node — xseed 社区节点
 用法：
   xseed-node [run]              启动节点
   xseed-node manifest [URL]     打印本节点的清单条目（JSON），提交到注册中心
+
+注册中心维护者：
+  xseed-node registry keygen KEY_FILE             生成签名私钥，打印公钥
+  xseed-node registry build DIR [OUT]             由 DIR/nodes/*.json、DIR/sites/*.json、DIR/public-trackers.txt
+                                                  生成 registry.json（版本号取当前时间）
+  xseed-node registry sign KEY_FILE REGISTRY      写出 REGISTRY.sig
+  xseed-node registry verify REGISTRY PUBKEY...   验证签名与内容
   xseed-node --version
 
 环境变量：
@@ -31,6 +38,7 @@ async fn main() -> Result<()> {
             println!("xseed-node {}", env!("CARGO_PKG_VERSION"));
             return Ok(());
         }
+        "registry" => return xseed_node::registry_tool::run(&args[1..]),
         "run" | "manifest" => {}
         other => anyhow::bail!("未知命令 {other}\n\n{HELP}"),
     }

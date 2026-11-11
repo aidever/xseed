@@ -1,0 +1,6 @@
+# 放到 node-data/xseed-node.toml（首次启动会自动生成默认配置，按需修改）
+listen = "0.0.0.0:7800"
+# 前面有 Caddy 反向代理，信任其 X-Forwarded-For，按真实 IP 限流
+trust_proxy = true
+# 自建注册中心时追加其签名公钥；官方公钥已内置
+registry_keys = []
