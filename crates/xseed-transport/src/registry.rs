@@ -8,10 +8,13 @@ use anyhow::{anyhow, bail, Context, Result};
 use serde::{Deserialize, Serialize};
 use xseed_core::hrw::{self, NodeInfo};
 
-/// 官方注册中心地址（配置项 `registry` 为空时使用）。为空表示尚未发布官方注册中心。
-pub const OFFICIAL_REGISTRY: &str = "";
+/// 官方注册中心地址（配置项 `registry` 为空时使用），仓库 aidever/xseed-registry。
+pub const OFFICIAL_REGISTRY: &str = "https://aidever.github.io/xseed-registry/registry.json";
 /// 内置受信任的注册中心公钥（主公钥与备用公钥）。用户自建注册中心时在配置中追加 `registry_keys`。
-pub const OFFICIAL_KEYS: &[&str] = &[];
+pub const OFFICIAL_KEYS: &[&str] = &[
+    "ed25519:4a8a494445a09b8e16ae8eae3002fce4c5cfd6a5b3a850590af9464a4940bc72", // 主
+    "ed25519:650d91272c4c9acb14ba1d2545d8197b580212c03047d7845b1f6b0919e3cd13", // 备用
+];
 
 /// 受信任公钥：内置公钥 + 配置追加的公钥。
 pub fn trusted_keys(extra: &[String]) -> Vec<String> {
@@ -244,6 +247,16 @@ pub async fn load(src: &str, http: &reqwest::Client) -> Result<Registry> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn official_keys_are_valid() {
+        assert!(OFFICIAL_REGISTRY.starts_with("https://"));
+        assert!(OFFICIAL_KEYS.len() >= 2, "主公钥 + 备用公钥");
+        for k in OFFICIAL_KEYS {
+            assert!(k.starts_with("ed25519:"), "{k}");
+            ed25519_dalek::VerifyingKey::from_bytes(&hex_key::<32>(k, "ed25519:").unwrap()).unwrap();
+        }
+    }
 
     #[test]
     fn signature_round_trip_and_tamper() {

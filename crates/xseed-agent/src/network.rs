@@ -305,7 +305,7 @@ async fn tick(app: &Shared) -> Result<()> {
     }
     let reg = net.registry().ok_or_else(|| anyhow!("没有节点清单"))?;
     if reg.nodes.is_empty() {
-        net.set_state("error", Some("节点清单为空".into()));
+        net.set_state("error", Some("节点清单里还没有社区节点，可在“设置”中填写自建节点清单".into()));
         return Ok(());
     }
     // 健康检查
